@@ -9,8 +9,8 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import ro.luca1152.balloon.MyGame;
 
 public class LoadingScreen extends ScreenAdapter {
-    private final int MAP_COUNT = 1;
-    float timer = 0f;
+    private final int MAP_COUNT = 2;
+    private float timer = 0f;
 
     @Override
     public void show() {
@@ -20,6 +20,7 @@ public class LoadingScreen extends ScreenAdapter {
 
     private void loadTextures() {
         MyGame.manager.load("textures/player.png", Texture.class);
+        MyGame.manager.load("textures/finish.png", Texture.class);
     }
 
     private void loadMaps() {

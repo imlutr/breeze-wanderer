@@ -1,26 +1,34 @@
 package ro.luca1152.balloon.entities;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import ro.luca1152.balloon.MyGame;
-import ro.luca1152.balloon.utils.MapBodyBuilder;
 
 class Balloon extends Image {
-    private final float WIDTH = 1f, HEIGHT = 1.3f;
-    public Body body;
+    // Constants
+    private final float WIDTH = 1.2f, HEIGHT = 1.6f;
 
-    Balloon(TiledMap tiledMap, World world, RectangleMapObject mapObject) {
+    // Collisions
+    private Rectangle collisionBox;
+
+    // Box2D
+    private Body body;
+
+    Balloon(World world, Rectangle rectangle) {
         super(MyGame.manager.get("textures/player.png", Texture.class));
 
         // Image
         this.setSize(WIDTH, HEIGHT);
-        Vector2 position = MapBodyBuilder.getPoint(mapObject);
-        this.setPosition(position.x, position.y);
+        this.setPosition(rectangle.x / MyGame.PPM + WIDTH / 2f, rectangle.y / MyGame.PPM + HEIGHT / 2f - .35f);
+        this.getColor().a = .2f;
+
+        // Collisions
+        collisionBox = rectangle;
+        collisionBox.set(getX(), getY(), getWidth(), getHeight());
 
         // Box2D
         BodyDef bodyDef = new BodyDef();
@@ -29,8 +37,8 @@ class Balloon extends Image {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = createEllipse(WIDTH / 2f, HEIGHT / 2f);
         body.createFixture(fixtureDef);
-        body.setTransform(position, 0f);
-        body.setLinearDamping(1f);
+        body.setTransform(rectangle.x, rectangle.y, 0f);
+        body.setLinearDamping(.15f);
     }
 
     private ChainShape createEllipse(float width, float height) {
@@ -48,11 +56,16 @@ class Balloon extends Image {
         return ellipse;
     }
 
+    public Rectangle getCollisionBox() {
+        collisionBox.set(getX(), getY(), getWidth(), getHeight());
+        return collisionBox;
+    }
+
     @Override
     public void act(float delta) {
         super.act(delta);
         body.applyForce(new Vector2(0, 10f), body.getWorldCenter(), true);
-        setPosition(body.getWorldCenter().x - getWidth() / 2f, body.getWorldCenter().y - getHeight() / 2f);
+        setPosition(body.getWorldCenter().x - WIDTH / 2f, body.getWorldCenter().y - HEIGHT / 2f);
         setRotation(body.getAngle() * MathUtils.radDeg);
     }
 }

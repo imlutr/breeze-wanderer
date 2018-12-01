@@ -6,18 +6,26 @@ import com.badlogic.gdx.graphics.GL20;
 import ro.luca1152.balloon.entities.Level;
 
 public class PlayScreen extends ScreenAdapter {
+    // Level
+    private int levelNumber = 1;
     private Level level;
 
     @Override
     public void show() {
-        level = new Level(1);
+        level = new Level(levelNumber);
     }
 
     @Override
     public void render(float delta) {
-        level.update(delta);
+        update(delta);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl20.glClearColor(1f, 1f, 1f, 1f);
         level.draw();
+    }
+
+    private void update(float delta) {
+        level.update(delta);
+        if (level.isFinished)
+            level = new Level(++levelNumber);
     }
 }
