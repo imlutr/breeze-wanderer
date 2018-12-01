@@ -16,7 +16,7 @@ class Balloon extends Image {
     private Rectangle collisionBox;
 
     // Box2D
-    private Body body;
+    public Body body;
 
     Balloon(World world, Rectangle rectangle) {
         super(MyGame.manager.get("textures/player.png", Texture.class));

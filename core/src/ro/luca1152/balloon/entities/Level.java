@@ -1,12 +1,14 @@
 package ro.luca1152.balloon.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -93,7 +95,39 @@ public class Level {
     public void update(float delta) {
         gameStage.act(delta);
         listenForCollisions();
+        makeCameraFollowPlayer();
         world.step(1 / 60f, 6, 2);
+    }
+
+    private void makeCameraFollowPlayer() {
+        Vector2 balloonPos = balloons.get(0).body.getWorldCenter();
+        gameStage.getCamera().position.lerp(new Vector3(balloonPos.x, balloonPos.y, 0f), .15f);
+        keepCameraWithinBounds();
+        gameStage.getCamera().update();
+    }
+
+    private void keepCameraWithinBounds() {
+        OrthographicCamera camera = (OrthographicCamera) gameStage.getCamera();
+
+        float mapLeft = 0f, mapRight = mapWidth;
+        if (mapWidth > camera.viewportWidth) {
+            mapLeft = -1;
+            mapRight = mapWidth + 1;
+        }
+        float mapBottom = 0f, mapTop = mapHeight;
+        float cameraHalfWidth = camera.viewportWidth / 2f, cameraHalfHeight = camera.viewportHeight / 2f;
+        float cameraLeft = camera.position.x - cameraHalfWidth, cameraRight = camera.position.x - cameraHalfWidth;
+        float cameraBottom = camera.position.y - cameraHalfHeight, cameraTop = camera.position.y + cameraHalfHeight;
+
+        // Clam horizontal axis
+        if (camera.viewportWidth > mapRight) camera.position.x = mapRight / 2f;
+        else if (cameraLeft <= mapLeft) camera.position.x = mapLeft + cameraHalfWidth;
+        else if (cameraRight >= mapRight) camera.position.x = mapRight - cameraHalfWidth;
+
+        // Clamp vertical axis
+        if (camera.viewportHeight > mapTop) camera.position.y = mapTop / 2f;
+        else if (cameraBottom <= mapBottom) camera.position.y = mapBottom + cameraHalfHeight;
+        else if (cameraTop >= mapTop) camera.position.y = mapTop - cameraHalfHeight;
     }
 
     private void listenForCollisions() {
