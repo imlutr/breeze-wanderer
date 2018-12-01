@@ -16,18 +16,18 @@ class Balloon extends Image {
     private Rectangle collisionBox;
 
     // Box2D
-    public Body body;
+    Body body;
 
     Balloon(World world, Rectangle rectangle) {
         super(MyGame.manager.get("textures/player.png", Texture.class));
 
         // Image
         this.setSize(WIDTH, HEIGHT);
-        this.setPosition(rectangle.x / MyGame.PPM + WIDTH / 2f, rectangle.y / MyGame.PPM + HEIGHT / 2f - .35f);
+        this.setPosition(rectangle.x / MyGame.PPM, rectangle.y / MyGame.PPM);
         this.getColor().a = .2f;
 
         // Collisions
-        collisionBox = rectangle;
+        collisionBox = new Rectangle();
         collisionBox.set(getX(), getY(), getWidth(), getHeight());
 
         // Box2D
@@ -37,7 +37,7 @@ class Balloon extends Image {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = createEllipse(WIDTH / 2f, HEIGHT / 2f);
         body.createFixture(fixtureDef);
-        body.setTransform(rectangle.x, rectangle.y, 0f);
+        body.setTransform(getX() + getWidth() / 2f, getY() + getHeight() / 2f, 0f);
         body.setLinearDamping(.15f);
     }
 
@@ -64,8 +64,8 @@ class Balloon extends Image {
     @Override
     public void act(float delta) {
         super.act(delta);
-        body.applyForce(new Vector2(0, 20f), body.getWorldCenter(), true);
-        body.getLinearVelocity().y = Math.max(body.getLinearVelocity().y, 3f);
+        body.applyForce(new Vector2(0, 18f), body.getWorldCenter(), true);
+        body.getLinearVelocity().y = Math.max(body.getLinearVelocity().y, 2.5f);
         setPosition(body.getWorldCenter().x - WIDTH / 2f, body.getWorldCenter().y - HEIGHT / 2f);
         setRotation(body.getAngle() * MathUtils.radDeg);
     }

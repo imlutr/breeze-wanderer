@@ -25,7 +25,7 @@ public class PlayScreen extends ScreenAdapter {
 
     private void update(float delta) {
         level.update(delta);
-        if (level.isFinished)
-            level = new Level(++levelNumber);
+        if (level.restart) level = new Level(levelNumber);
+        else if (level.isFinished) level = new Level(++levelNumber);
     }
 }

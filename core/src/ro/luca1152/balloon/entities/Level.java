@@ -1,6 +1,9 @@
 package ro.luca1152.balloon.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
@@ -20,6 +23,7 @@ import java.util.ArrayList;
 public class Level {
     // Booleans
     public boolean isFinished = false;
+    public boolean restart = false;
 
     // TiledMap
     private TiledMap tiledMap;
@@ -52,7 +56,7 @@ public class Level {
         MapBodyBuilder.buildShapes(tiledMap, MyGame.PPM, world);
 
         // Scene2D
-        gameStage = new Stage(new FitViewport(10f, 10f), MyGame.batch);
+        gameStage = new Stage(new FitViewport(12f, 12f), MyGame.batch);
 
         // Balloons
         balloons = new ArrayList<>();
@@ -82,7 +86,16 @@ public class Level {
         mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / MyGame.PPM, MyGame.batch);
 
         // InputProcessor
-        Gdx.input.setInputProcessor(gameStage);
+        Gdx.input.setInputProcessor(new InputMultiplexer(
+                gameStage,
+                new InputAdapter() {
+                    @Override
+                    public boolean keyDown(int keycode) {
+                        if (keycode == Input.Keys.SPACE)
+                            restart = true;
+                        return true;
+                    }
+                }));
     }
 
     public void draw() {
@@ -131,10 +144,11 @@ public class Level {
     }
 
     private void listenForCollisions() {
-        for (Balloon balloon : balloons) {
-            if (balloon.getCollisionBox().overlaps(finish.getCollisionBox())) {
-                isFinished = true;
+        if (!restart)
+            for (Balloon balloon : balloons) {
+                if (balloon.getCollisionBox().overlaps(finish.getCollisionBox())) {
+                    isFinished = true;
+                }
             }
-        }
     }
 }

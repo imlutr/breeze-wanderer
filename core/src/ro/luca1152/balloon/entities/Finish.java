@@ -11,14 +11,12 @@ class Finish extends Image {
 
     Finish(Rectangle rectangle) {
         super(MyGame.manager.get("textures/finish.png", Texture.class));
-        this.collisionBox = rectangle;
-
         // Image
         setPosition(rectangle.x / MyGame.PPM, rectangle.y / MyGame.PPM);
         setSize(rectangle.width / MyGame.PPM, rectangle.height / MyGame.PPM);
 
         // Collisions
-        collisionBox.set(getX(), getY(), getWidth(), getHeight());
+        collisionBox = new Rectangle(getX(), getY(), getWidth(), getHeight());
     }
 
     Rectangle getCollisionBox() {
