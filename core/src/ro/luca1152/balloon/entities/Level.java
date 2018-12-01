@@ -50,7 +50,7 @@ public class Level {
         MapBodyBuilder.buildShapes(tiledMap, MyGame.PPM, world);
 
         // Scene2D
-        gameStage = new Stage(new FitViewport(15f, 15f), MyGame.batch);
+        gameStage = new Stage(new FitViewport(10f, 10f), MyGame.batch);
 
         // Balloons
         balloons = new ArrayList<>();

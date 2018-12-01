@@ -56,7 +56,7 @@ class Balloon extends Image {
         return ellipse;
     }
 
-    public Rectangle getCollisionBox() {
+    Rectangle getCollisionBox() {
         collisionBox.set(getX(), getY(), getWidth(), getHeight());
         return collisionBox;
     }
@@ -64,7 +64,8 @@ class Balloon extends Image {
     @Override
     public void act(float delta) {
         super.act(delta);
-        body.applyForce(new Vector2(0, 10f), body.getWorldCenter(), true);
+        body.applyForce(new Vector2(0, 20f), body.getWorldCenter(), true);
+        body.getLinearVelocity().y = Math.max(body.getLinearVelocity().y, 3f);
         setPosition(body.getWorldCenter().x - WIDTH / 2f, body.getWorldCenter().y - HEIGHT / 2f);
         setRotation(body.getAngle() * MathUtils.radDeg);
     }
