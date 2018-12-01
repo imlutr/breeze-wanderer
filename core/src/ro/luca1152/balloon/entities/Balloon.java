@@ -10,16 +10,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import ro.luca1152.balloon.MyGame;
 import ro.luca1152.balloon.utils.MapBodyBuilder;
 
-class Player extends Image {
-    private final float WIDTH = .8f, HEIGHT = 1f;
+class Balloon extends Image {
+    private final float WIDTH = 1f, HEIGHT = 1.3f;
     public Body body;
 
-    Player(TiledMap tiledMap, World world) {
+    Balloon(TiledMap tiledMap, World world, RectangleMapObject mapObject) {
         super(MyGame.manager.get("textures/player.png", Texture.class));
 
         // Image
         this.setSize(WIDTH, HEIGHT);
-        Vector2 position = MapBodyBuilder.getPoint((RectangleMapObject) tiledMap.getLayers().get("Player").getObjects().get(0));
+        Vector2 position = MapBodyBuilder.getPoint(mapObject);
         this.setPosition(position.x, position.y);
 
         // Box2D
@@ -30,10 +30,11 @@ class Player extends Image {
         fixtureDef.shape = createEllipse(WIDTH / 2f, HEIGHT / 2f);
         body.createFixture(fixtureDef);
         body.setTransform(position, 0f);
+        body.setLinearDamping(1f);
     }
 
     private ChainShape createEllipse(float width, float height) {
-        int STEPS = 64;
+        int STEPS = 8;
 
         ChainShape ellipse = new ChainShape();
         Vector2[] vertices = new Vector2[STEPS];
