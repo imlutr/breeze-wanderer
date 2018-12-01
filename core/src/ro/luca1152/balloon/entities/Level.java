@@ -36,11 +36,11 @@ public class Level {
         mapHeight = (Integer) mapProperties.get("height");
 
         // Box2D
-        world = new World(new Vector2(0, -9.8f), true);
+        world = new World(new Vector2(0, -10f), true);
         MapBodyBuilder.buildShapes(tiledMap, MyGame.PPM, world);
 
         // Scene2D
-        gameStage = new Stage(new FitViewport(15f, 15f), MyGame.batch);
+        gameStage = new Stage(new FitViewport(10f, 10f), MyGame.batch);
 
         // Entities
         player = new Player(tiledMap, world);
@@ -58,7 +58,7 @@ public class Level {
     }
 
     public void update(float delta) {
-        world.step(1 / 60f, 6, 2);
         gameStage.act(delta);
+        world.step(1 / 60f, 6, 2);
     }
 }
