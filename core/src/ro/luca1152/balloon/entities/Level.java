@@ -2,8 +2,6 @@ package ro.luca1152.balloon.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -21,28 +19,21 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import ro.luca1152.balloon.MyGame;
 import ro.luca1152.balloon.utils.MapBodyBuilder;
 
-import java.util.ArrayList;
-
 public class Level {
+    private static Vector2 closestPoint;
+    private static Fixture closestFixture;
     // TiledMap
     private TiledMap tiledMap;
     private MapProperties mapProperties;
     private int mapWidth, mapHeight;
-
     // Box2D
     private World world;
-
     // Scene2D
     private Stage gameStage;
-
-    private static Vector2 closestPoint;
-
     // Render
     private OrthogonalTiledMapRenderer mapRenderer;
-    private static Fixture closestFixture;
     // Entities
     private Balloon balloon;
-    private ArrayList<Vector2> al = new ArrayList<>();
 
     public Level(int levelNumber) {
         // TiledMap
@@ -94,32 +85,27 @@ public class Level {
             rayDir.set(MathUtils.sin(angle), MathUtils.cos(angle));
             rayEnd.set(center.x + blastRadius * rayDir.x, center.y + blastRadius * rayDir.y);
 
+            // Find the closest fixture
             closestPoint = null;
             closestFixture = null;
-
             RayCastCallback callback = (fixture, point, normal, fraction) -> {
                 closestPoint = point;
                 closestFixture = fixture;
                 return fraction;
             };
-
             world.rayCast(callback, center, rayEnd);
-            if (closestFixture != null) {
-                al.add(center.cpy());
-                al.add(closestPoint.cpy());
+
+            // If a fixture was found in the ray cast, then apply an impulse there
+            if (closestFixture != null)
                 applyBlastImpulse(closestFixture.getBody(), center, closestPoint, blastPower / (float) numRays);
-            }
         }
     }
 
     private void applyBlastImpulse(Body body, Vector2 blastCenter, Vector2 applyPoint, float blastPower) {
         Vector2 blastDir = applyPoint.cpy().sub(blastCenter);
         float distance = blastDir.len();
-        if (distance == 0) return;
-
-        float invDistance = 1f / distance;
-        float impulseMag = Math.min(blastPower * invDistance, blastPower * 0.5f); //Not physically correct
-
+        if (distance == 0) return; // So 1 / distance is valid
+        float impulseMag = Math.min(blastPower * (1f / distance), blastPower * 0.5f);
         body.applyLinearImpulse(blastDir.nor().scl(impulseMag), applyPoint, true);
     }
 
@@ -128,13 +114,6 @@ public class Level {
 //        gameStage.draw();
         mapRenderer.render();
         MyGame.debugRenderer.render(world, gameStage.getCamera().combined);
-
-        MyGame.shapeRenderer.setProjectionMatrix(gameStage.getCamera().combined);
-        MyGame.shapeRenderer.setColor(Color.RED);
-        MyGame.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        for (int i = 0; i < al.size(); i += 2)
-            MyGame.shapeRenderer.line(al.get(i), al.get(i + 1));
-        MyGame.shapeRenderer.end();
     }
 
     public void update(float delta) {
