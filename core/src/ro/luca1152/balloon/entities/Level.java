@@ -10,6 +10,7 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -39,6 +40,7 @@ public class Level {
     private Stage gameStage;
 
     // Render
+    private final float MIN_ZOOM = .5f, MAX_ZOOM = 1.5f;
     private OrthogonalTiledMapRenderer mapRenderer;
 
     // Entities
@@ -47,8 +49,6 @@ public class Level {
     private Array<Hinge> hinges;
     private Array<RotatingPlatform> rotatingPlatforms;
     private Finish finish;
-
-    Body body;
 
     public Level(int levelNumber) {
         // TiledMap
@@ -118,8 +118,6 @@ public class Level {
         finish = new Finish(((RectangleMapObject) tiledMap.getLayers().get("Finish").getObjects().get(0)).getRectangle());
         gameStage.addActor(finish);
 
-        // Hinges
-
         // Render
         mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / MyGame.PPM, MyGame.batch);
 
@@ -152,25 +150,40 @@ public class Level {
 
     private void makeCameraFollowBalloons() {
         if (balloons.size != 0) {
-            Vector3 centerPoint = getBalloonsCenterPoint(balloons);
+            BoundingBox balloonsBox = getBalloonsBoundingBox(balloons);
+
+            Vector3 centerPoint = getBalloonsCenterPoint(balloonsBox);
             gameStage.getCamera().position.slerp(centerPoint, .15f);
+            zoomTheCamera(balloonsBox, (OrthographicCamera) gameStage.getCamera());
             keepCameraWithinBounds();
             gameStage.getCamera().update();
         }
     }
 
-    private Vector3 getBalloonsCenterPoint(Array<Balloon> balloons) {
+    private BoundingBox getBalloonsBoundingBox(Array<Balloon> balloons) {
         Vector3 firstBalloonCenter = new Vector3(balloons.get(0).body.getWorldCenter(), 0f);
+        BoundingBox box = new BoundingBox(firstBalloonCenter, firstBalloonCenter);
         if (balloons.size == 1)
-            return firstBalloonCenter;
+            return box;
         else {
-            BoundingBox box = new BoundingBox(firstBalloonCenter, firstBalloonCenter);
             for (int balloon = 1; balloon < balloons.size; balloon++)
                 box.ext(new Vector3(balloons.get(balloon).body.getWorldCenter(), 0f));
-            Vector3 centerPoint = new Vector3();
-            box.getCenter(centerPoint);
-            return centerPoint;
+            return box;
         }
+    }
+
+    private void zoomTheCamera(BoundingBox boundingBox, OrthographicCamera camera) {
+        camera.zoom = MathUtils.lerp(MIN_ZOOM, MAX_ZOOM, Math.min(getGreatestDistance(boundingBox) / mapWidth, 1f));
+    }
+
+    private float getGreatestDistance(BoundingBox boundingBox) {
+        return Math.max(boundingBox.getWidth(), boundingBox.getHeight());
+    }
+
+    private Vector3 getBalloonsCenterPoint(BoundingBox boundingBox) {
+        Vector3 center = new Vector3();
+        boundingBox.getCenter(center);
+        return center;
     }
 
     private void keepCameraWithinBounds() {

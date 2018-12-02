@@ -26,6 +26,8 @@ class RotatingPlatform {
         RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
         revoluteJointDef.bodyA = hinge.body;
         revoluteJointDef.bodyB = body;
+        revoluteJointDef.localAnchorA.set(0f, 0f);
+        revoluteJointDef.localAnchorA.set(0f, 0f);
         revoluteJointDef.collideConnected = false;
         revoluteJointDef.enableMotor = true;
         revoluteJointDef.maxMotorTorque = 5;

@@ -19,7 +19,7 @@ public class MapBodyBuilder {
 
         Array<Body> bodies = new Array<Body>();
 
-        if (map.getLayers().get("Solid") == null)
+        if (map.getLayers().get("Solid") == null || map.getLayers().get("Solid").getObjects() == null)
             return bodies;
 
         MapObjects objects = map.getLayers().get("Solid").getObjects();

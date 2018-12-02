@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="2018.11.29" orientation="orthogonal" renderorder="right-down" width="18" height="18" tilewidth="64" tileheight="64" infinite="0" nextlayerid="7" nextobjectid="11">
- <objectgroup id="2" name="Solids"/>
+<map version="1.2" tiledversion="2018.11.29" orientation="orthogonal" renderorder="right-down" width="18" height="18" tilewidth="64" tileheight="64" infinite="0" nextlayerid="8" nextobjectid="15">
  <objectgroup id="3" name="Rotating Platforms">
-  <object id="3" x="534" y="832" width="320" height="24"/>
-  <object id="5" x="92" y="832" width="420" height="24"/>
+  <object id="3" x="782" y="522" width="320" height="24"/>
+  <object id="5" x="464" y="778" width="420" height="24"/>
  </objectgroup>
  <objectgroup id="4" name="Hinges">
-  <object id="6" x="346" y="840" width="10" height="10"/>
-  <object id="8" x="690" y="838" width="10" height="10"/>
+  <object id="6" x="718" y="786" width="10" height="10"/>
+  <object id="8" x="938" y="528" width="10" height="10"/>
  </objectgroup>
  <objectgroup id="5" name="Balloons">
-  <object id="1" x="234.267" y="896.8" width="76.8" height="102.4"/>
-  <object id="2" x="702.267" y="918.8" width="76.8" height="102.4"/>
+  <object id="1" x="558.267" y="896.8" width="76.8" height="102.4"/>
+  <object id="2" x="898.267" y="896.8" width="76.8" height="102.4"/>
+ </objectgroup>
+ <objectgroup id="7" name="Air Blower">
+  <object id="11" x="738" y="890" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="6" name="Finish">
-  <object id="9" x="384" y="576" width="192" height="64"/>
+  <object id="9" x="632" y="266" width="192" height="64"/>
  </objectgroup>
 </map>
