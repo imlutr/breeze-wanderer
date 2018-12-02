@@ -32,14 +32,6 @@ public class AirBlower extends Image {
         this.getColor().a = .2f;
         this.setTouchable(Touchable.enabled);
 
-        addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                explode(world, 32, 4f, 100f, getX() + getOriginX(), getY() + getOriginY());
-                return true;
-            }
-        });
-
         // Box2D
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
@@ -47,6 +39,15 @@ public class AirBlower extends Image {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = MapBodyBuilder.getRectangle(mapObject);
         body.createFixture(fixtureDef);
+
+        // Listener
+        addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                explode(world, 32, 4f, 100f, getX() + getOriginX(), getY() + getOriginY());
+                return true;
+            }
+        });
     }
 
     private void explode(World world, final int numRays, float blastRadius, final float blastPower, float posX, float posY) {

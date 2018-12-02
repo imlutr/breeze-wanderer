@@ -5,7 +5,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import ro.luca1152.balloon.MyGame;
 
 class Balloon extends Image {
@@ -39,6 +41,17 @@ class Balloon extends Image {
         body.createFixture(fixtureDef);
         body.setTransform(getX() + getWidth() / 2f, getY() + getHeight() / 2f, 0f);
         body.setLinearDamping(.15f);
+
+        // Listener
+        addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                // Remove the balloon if it was touched
+                world.destroyBody(body);
+                remove();
+                return true;
+            }
+        });
     }
 
     private ChainShape createEllipse(float width, float height) {
