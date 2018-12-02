@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -145,15 +146,31 @@ public class Level {
     public void update(float delta) {
         gameStage.act(delta);
         listenForCollisions();
-        makeCameraFollowPlayer();
+        makeCameraFollowBalloons();
         world.step(1 / 60f, 6, 2);
     }
 
-    private void makeCameraFollowPlayer() {
-        Vector2 balloonPos = balloons.get(0).body.getWorldCenter();
-        gameStage.getCamera().position.lerp(new Vector3(balloonPos.x, balloonPos.y, 0f), .15f);
-        keepCameraWithinBounds();
-        gameStage.getCamera().update();
+    private void makeCameraFollowBalloons() {
+        if (balloons.size != 0) {
+            Vector3 centerPoint = getBalloonsCenterPoint(balloons);
+            gameStage.getCamera().position.slerp(centerPoint, .15f);
+            keepCameraWithinBounds();
+            gameStage.getCamera().update();
+        }
+    }
+
+    private Vector3 getBalloonsCenterPoint(Array<Balloon> balloons) {
+        Vector3 firstBalloonCenter = new Vector3(balloons.get(0).body.getWorldCenter(), 0f);
+        if (balloons.size == 1)
+            return firstBalloonCenter;
+        else {
+            BoundingBox box = new BoundingBox(firstBalloonCenter, firstBalloonCenter);
+            for (int balloon = 1; balloon < balloons.size; balloon++)
+                box.ext(new Vector3(balloons.get(balloon).body.getWorldCenter(), 0f));
+            Vector3 centerPoint = new Vector3();
+            box.getCenter(centerPoint);
+            return centerPoint;
+        }
     }
 
     private void keepCameraWithinBounds() {

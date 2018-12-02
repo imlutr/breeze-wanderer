@@ -7,7 +7,7 @@ import ro.luca1152.balloon.entities.Level;
 
 public class PlayScreen extends ScreenAdapter {
     // Level
-    private int levelNumber = 3;
+    private int levelNumber = 4;
     private Level level;
 
     @Override

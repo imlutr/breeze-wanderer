@@ -17,8 +17,12 @@ public class MapBodyBuilder {
     public static Array<Body> buildSolids(Map map, float PPM, World world) {
         MapBodyBuilder.PPM = PPM;
 
-        MapObjects objects = map.getLayers().get("Solid").getObjects();
         Array<Body> bodies = new Array<Body>();
+
+        if (map.getLayers().get("Solid") == null)
+            return bodies;
+
+        MapObjects objects = map.getLayers().get("Solid").getObjects();
 
         for (MapObject object : objects) {
             Shape shape;

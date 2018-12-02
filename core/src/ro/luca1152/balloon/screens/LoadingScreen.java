@@ -10,7 +10,7 @@ import ro.luca1152.balloon.MyGame;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class LoadingScreen extends ScreenAdapter {
-    private final int MAP_COUNT = 3;
+    private final int MAP_COUNT = 4;
     private float timer = 0f;
 
     @Override

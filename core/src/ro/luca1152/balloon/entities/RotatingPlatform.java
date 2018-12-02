@@ -24,8 +24,6 @@ class RotatingPlatform {
 
         // Create the joint
         RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
-        System.out.println(hinge.body.getPosition());
-        System.out.println(body.getPosition());
         revoluteJointDef.bodyA = hinge.body;
         revoluteJointDef.bodyB = body;
         revoluteJointDef.collideConnected = false;
