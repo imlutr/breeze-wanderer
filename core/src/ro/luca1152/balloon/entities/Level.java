@@ -12,8 +12,13 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import ro.luca1152.balloon.MyGame;
 import ro.luca1152.balloon.utils.MapBodyBuilder;
@@ -44,6 +49,8 @@ public class Level {
     private ArrayList<AirBlower> airBlowers;
     private Finish finish;
 
+    Body body;
+
     public Level(int levelNumber) {
         // TiledMap
         tiledMap = MyGame.manager.get("maps/map-" + levelNumber + ".tmx", TiledMap.class);
@@ -53,7 +60,7 @@ public class Level {
 
         // Box2D
         world = new World(new Vector2(0, -10f), true);
-        MapBodyBuilder.buildShapes(tiledMap, MyGame.PPM, world);
+        Array<Body> solids = MapBodyBuilder.buildShapes(tiledMap, MyGame.PPM, world);
 
         // Scene2D
         gameStage = new Stage(new FitViewport(12f, 12f), MyGame.batch);
@@ -81,6 +88,23 @@ public class Level {
         // Finish
         finish = new Finish(((RectangleMapObject) tiledMap.getLayers().get("Finish").getObjects().get(0)).getRectangle());
         gameStage.addActor(finish);
+
+        // Hinges
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(MapBodyBuilder.getPoint((RectangleMapObject) tiledMap.getLayers().get("Hinges").getObjects().get(0)));
+        body = world.createBody(bodyDef);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = MapBodyBuilder.getRectangle((RectangleMapObject) tiledMap.getLayers().get("Hinges").getObjects().get(0));
+        body.createFixture(fixtureDef);
+
+        RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
+        revoluteJointDef.bodyA = body;
+        revoluteJointDef.bodyB = solids.get(0);
+        revoluteJointDef.collideConnected = false;
+        revoluteJointDef.localAnchorA.set(0f, 0f);
+        revoluteJointDef.localAnchorB.set(0f, 0f);
+        world.createJoint(revoluteJointDef);
 
         // Render
         mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / MyGame.PPM, MyGame.batch);

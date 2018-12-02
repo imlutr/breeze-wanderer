@@ -8,8 +8,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import ro.luca1152.balloon.MyGame;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class LoadingScreen extends ScreenAdapter {
-    private final int MAP_COUNT = 2;
+    private final int MAP_COUNT = 3;
     private float timer = 0f;
 
     @Override
