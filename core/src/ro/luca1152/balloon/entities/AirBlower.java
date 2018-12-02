@@ -1,6 +1,5 @@
 package ro.luca1152.balloon.entities;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.MathUtils;
@@ -22,7 +21,7 @@ public class AirBlower extends Image {
     // Box2D
     private Body body;
 
-    public AirBlower(World world, RectangleMapObject mapObject, Camera camera) {
+    public AirBlower(World world, RectangleMapObject mapObject) {
         super(MyGame.manager.get("textures/finish.png", Texture.class));
 
         // Image

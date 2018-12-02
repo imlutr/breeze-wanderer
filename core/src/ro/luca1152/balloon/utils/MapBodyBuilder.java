@@ -9,11 +9,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import ro.luca1152.balloon.MyGame;
 
 public class MapBodyBuilder {
     private static float PPM;
 
-    public static Array<Body> buildShapes(Map map, float PPM, World world) {
+    public static Array<Body> buildSolids(Map map, float PPM, World world) {
         MapBodyBuilder.PPM = PPM;
 
         MapObjects objects = map.getLayers().get("Solid").getObjects();
@@ -26,7 +27,7 @@ public class MapBodyBuilder {
             else continue;
 
             BodyDef bodyDef = new BodyDef();
-            bodyDef.type = BodyDef.BodyType.DynamicBody;
+            bodyDef.type = BodyDef.BodyType.StaticBody;
             bodyDef.position.set(getPoint((RectangleMapObject) object));
             Body body = world.createBody(bodyDef);
             body.createFixture(shape, 1);
@@ -47,5 +48,14 @@ public class MapBodyBuilder {
     public static Vector2 getPoint(RectangleMapObject rectObject) {
         Rectangle rectangle = rectObject.getRectangle();
         return new Vector2((rectangle.x + rectangle.width / 2f) / PPM, (rectangle.y + rectangle.height / 2f) / PPM);
+    }
+
+    public static Rectangle getInformation(RectangleMapObject rectangleObject) {
+        Rectangle rectangle = new Rectangle(rectangleObject.getRectangle());
+        rectangle.width /= MyGame.PPM;
+        rectangle.height /= MyGame.PPM;
+        rectangle.x /= MyGame.PPM;
+        rectangle.y /= MyGame.PPM;
+        return rectangle;
     }
 }

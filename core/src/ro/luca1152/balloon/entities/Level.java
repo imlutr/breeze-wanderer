@@ -10,20 +10,16 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import ro.luca1152.balloon.MyGame;
 import ro.luca1152.balloon.utils.MapBodyBuilder;
-
-import java.util.ArrayList;
 
 public class Level {
     // Booleans
@@ -45,8 +41,10 @@ public class Level {
     private OrthogonalTiledMapRenderer mapRenderer;
 
     // Entities
-    private ArrayList<Balloon> balloons;
-    private ArrayList<AirBlower> airBlowers;
+    private Array<Balloon> balloons;
+    private Array<AirBlower> airBlowers;
+    private Array<Hinge> hinges;
+    private Array<RotatingPlatform> rotatingPlatforms;
     private Finish finish;
 
     Body body;
@@ -60,13 +58,13 @@ public class Level {
 
         // Box2D
         world = new World(new Vector2(0, -10f), true);
-        Array<Body> solids = MapBodyBuilder.buildShapes(tiledMap, MyGame.PPM, world);
+        Array<Body> solids = MapBodyBuilder.buildSolids(tiledMap, MyGame.PPM, world);
 
         // Scene2D
         gameStage = new Stage(new FitViewport(12f, 12f), MyGame.batch);
 
         // Balloons
-        balloons = new ArrayList<>();
+        balloons = new Array<>();
         MapObjects balloonsObjects = tiledMap.getLayers().get("Balloons").getObjects();
         for (int object = 0; object < balloonsObjects.getCount(); object++) {
             Balloon balloon = new Balloon(world, ((RectangleMapObject) balloonsObjects.get(object)).getRectangle());
@@ -75,13 +73,43 @@ public class Level {
         }
 
         // Air blowers
-        airBlowers = new ArrayList<>();
+        airBlowers = new Array<>();
         if (tiledMap.getLayers().get("Air Blower") != null) {
             MapObjects airBlowersObjects = tiledMap.getLayers().get("Air Blower").getObjects();
             for (int object = 0; object < airBlowersObjects.getCount(); object++) {
-                AirBlower airBlower = new AirBlower(world, (RectangleMapObject) airBlowersObjects.get(object), gameStage.getCamera());
+                AirBlower airBlower = new AirBlower(world, (RectangleMapObject) airBlowersObjects.get(object));
                 airBlowers.add(airBlower);
                 gameStage.addActor(airBlower);
+            }
+        }
+
+        // Hinges
+        hinges = new Array<>();
+        if (tiledMap.getLayers().get("Hinges") != null) {
+            MapObjects hingesObjects = tiledMap.getLayers().get("Hinges").getObjects();
+            for (int object = 0; object < hingesObjects.getCount(); object++) {
+                Hinge hinge = new Hinge(world, (RectangleMapObject) hingesObjects.get(object));
+                hinges.add(hinge);
+            }
+        }
+
+        // Rotating platforms
+        rotatingPlatforms = new Array<>();
+        if (tiledMap.getLayers().get("Rotating Platforms") != null && hinges.size != 0) {
+            MapObjects rotatingPlatformsObjects = tiledMap.getLayers().get("Rotating Platforms").getObjects();
+            for (int object = 0; object < rotatingPlatformsObjects.getCount(); object++) {
+                // Find the rotating platform's hinge
+                Rectangle information = MapBodyBuilder.getInformation((RectangleMapObject) rotatingPlatformsObjects.get(object));
+                Array<Hinge> hingesFound = new Array<>();
+                world.QueryAABB(fixture -> {
+                    if (fixture.getBody().getUserData() != null && fixture.getBody().getUserData().getClass() == Hinge.class) {
+                        hingesFound.add((Hinge) fixture.getBody().getUserData());
+                        return false; // Stop the search, the hinge was found
+                    } else
+                        return true; // Continue the search
+                }, information.x, information.y, information.x + information.width, information.y + information.height);
+                RotatingPlatform rotatingPlatform = new RotatingPlatform(world, (RectangleMapObject) rotatingPlatformsObjects.get(object), hingesFound.get(0));
+                rotatingPlatforms.add(rotatingPlatform);
             }
         }
 
@@ -90,23 +118,6 @@ public class Level {
         gameStage.addActor(finish);
 
         // Hinges
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set(MapBodyBuilder.getPoint((RectangleMapObject) tiledMap.getLayers().get("Hinges").getObjects().get(0)));
-        body = world.createBody(bodyDef);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = MapBodyBuilder.getRectangle((RectangleMapObject) tiledMap.getLayers().get("Hinges").getObjects().get(0));
-        body.createFixture(fixtureDef);
-
-        RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
-        revoluteJointDef.bodyA = body;
-        revoluteJointDef.bodyB = solids.get(0);
-        revoluteJointDef.collideConnected = false;
-        revoluteJointDef.localAnchorA.set(0f, 0f);
-        revoluteJointDef.localAnchorB.set(0f, 0f);
-        revoluteJointDef.enableMotor = true;
-        revoluteJointDef.maxMotorTorque = 10;
-        world.createJoint(revoluteJointDef);
 
         // Render
         mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / MyGame.PPM, MyGame.batch);
