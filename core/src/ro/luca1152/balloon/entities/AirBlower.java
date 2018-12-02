@@ -12,28 +12,31 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import ro.luca1152.balloon.MyGame;
 import ro.luca1152.balloon.utils.MapBodyBuilder;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class AirBlower extends Image {
+    // Constants
+    private final float WIDTH = 1f, HEIGHT = 1f;
+
     // Explosion
     private static Vector2 closestPoint;
     private static Fixture closestFixture;
-    // Constants
-    private final float WIDTH = 1f, HEIGHT = 1f;
+
     // Box2D
     private Body body;
 
-    public AirBlower(World world, RectangleMapObject mapObject) {
-        super(MyGame.manager.get("textures/finish.png", Texture.class));
+    AirBlower(World world, RectangleMapObject mapObject) {
+        super(MyGame.manager.get("textures/fan.png", Texture.class));
 
         // Image
         this.setSize(WIDTH, HEIGHT);
         this.setPosition(mapObject.getRectangle().x / MyGame.PPM, mapObject.getRectangle().y / MyGame.PPM);
         this.setOrigin(WIDTH / 2f, HEIGHT / 2f);
-        this.getColor().a = .2f;
         this.setTouchable(Touchable.enabled);
 
         // Box2D
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(MapBodyBuilder.getPoint(mapObject));
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = MapBodyBuilder.getRectangle(mapObject);

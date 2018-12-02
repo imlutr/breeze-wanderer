@@ -7,7 +7,7 @@ import ro.luca1152.balloon.entities.Level;
 
 public class PlayScreen extends ScreenAdapter {
     // Level
-    private int levelNumber = 4;
+    private int levelNumber = 1;
     private Level level;
 
     @Override
@@ -19,7 +19,7 @@ public class PlayScreen extends ScreenAdapter {
     public void render(float delta) {
         update(delta);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl20.glClearColor(1f, 1f, 1f, 1f);
+        Gdx.gl20.glClearColor(238 / 255f, 238 / 255f, 238 / 255f, 1f);
         level.draw();
     }
 

@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import ro.luca1152.balloon.utils.MapBodyBuilder;
 
+@SuppressWarnings("FieldCanBeLocal")
 class RotatingPlatform {
     private Body body;
 

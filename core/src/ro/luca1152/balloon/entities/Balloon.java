@@ -21,12 +21,11 @@ class Balloon extends Image {
     Body body;
 
     Balloon(World world, Rectangle rectangle) {
-        super(MyGame.manager.get("textures/player.png", Texture.class));
+        super(MyGame.manager.get("textures/balloon.png", Texture.class));
 
         // Image
         this.setSize(WIDTH, HEIGHT);
         this.setPosition(rectangle.x / MyGame.PPM, rectangle.y / MyGame.PPM);
-        this.getColor().a = .2f;
 
         // Collisions
         collisionBox = new Rectangle();

@@ -9,9 +9,10 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import ro.luca1152.balloon.screens.LoadingScreen;
 import ro.luca1152.balloon.screens.PlayScreen;
 
+@SuppressWarnings("WeakerAccess")
 public class MyGame extends Game {
     // Constants
-    public static final float PPM = 64f;
+    public static final float PPM = 64f; // Pixels per meter
 
     // Tools
     public static MyGame instance;

@@ -19,10 +19,10 @@ public class MapBodyBuilder {
 
         Array<Body> bodies = new Array<Body>();
 
-        if (map.getLayers().get("Solid") == null || map.getLayers().get("Solid").getObjects() == null)
+        if (map.getLayers().get("Solids") == null || map.getLayers().get("Solids").getObjects() == null)
             return bodies;
 
-        MapObjects objects = map.getLayers().get("Solid").getObjects();
+        MapObjects objects = map.getLayers().get("Solids").getObjects();
 
         for (MapObject object : objects) {
             Shape shape;
@@ -44,7 +44,6 @@ public class MapBodyBuilder {
     public static PolygonShape getRectangle(RectangleMapObject rectangleObject) {
         Rectangle rectangle = rectangleObject.getRectangle();
         PolygonShape polygon = new PolygonShape();
-        Vector2 size = new Vector2((rectangle.x + rectangle.width * 0.5f) / PPM, (rectangle.y + rectangle.height * 0.5f) / PPM);
         polygon.setAsBox(rectangle.width * 0.5f / PPM, rectangle.height * 0.5f / PPM);
         return polygon;
     }

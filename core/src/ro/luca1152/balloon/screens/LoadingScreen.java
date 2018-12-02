@@ -20,8 +20,9 @@ public class LoadingScreen extends ScreenAdapter {
     }
 
     private void loadTextures() {
-        MyGame.manager.load("textures/player.png", Texture.class);
+        MyGame.manager.load("textures/balloon.png", Texture.class);
         MyGame.manager.load("textures/finish.png", Texture.class);
+        MyGame.manager.load("textures/fan.png", Texture.class);
     }
 
     private void loadMaps() {

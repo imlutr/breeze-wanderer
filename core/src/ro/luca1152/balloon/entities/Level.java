@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import ro.luca1152.balloon.MyGame;
 import ro.luca1152.balloon.utils.MapBodyBuilder;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class Level {
     // Booleans
     public boolean isFinished = false;
@@ -40,7 +41,7 @@ public class Level {
     private Stage gameStage;
 
     // Render
-    private final float MIN_ZOOM = .5f, MAX_ZOOM = 1.5f;
+    private final float MIN_ZOOM = .5f, MAX_ZOOM = 1.25f;
     private OrthogonalTiledMapRenderer mapRenderer;
 
     // Entities
@@ -62,7 +63,7 @@ public class Level {
         Array<Body> solids = MapBodyBuilder.buildSolids(tiledMap, MyGame.PPM, world);
 
         // Scene2D
-        gameStage = new Stage(new FitViewport(12f, 12f), MyGame.batch);
+        gameStage = new Stage(new FitViewport(10f, 10f), MyGame.batch);
 
         // Balloons
         balloons = new Array<>();
@@ -75,8 +76,8 @@ public class Level {
 
         // Air blowers
         airBlowers = new Array<>();
-        if (tiledMap.getLayers().get("Air Blower") != null) {
-            MapObjects airBlowersObjects = tiledMap.getLayers().get("Air Blower").getObjects();
+        if (tiledMap.getLayers().get("Air Blowers") != null) {
+            MapObjects airBlowersObjects = tiledMap.getLayers().get("Air Blowers").getObjects();
             for (int object = 0; object < airBlowersObjects.getCount(); object++) {
                 AirBlower airBlower = new AirBlower(world, (RectangleMapObject) airBlowersObjects.get(object));
                 airBlowers.add(airBlower);
@@ -173,7 +174,8 @@ public class Level {
     }
 
     private void zoomTheCamera(BoundingBox boundingBox, OrthographicCamera camera) {
-        camera.zoom = MathUtils.lerp(MIN_ZOOM, MAX_ZOOM, Math.min(getGreatestDistance(boundingBox) / mapWidth, 1f));
+        if (balloons.size > 1)
+            camera.zoom = MathUtils.lerp(MIN_ZOOM, MAX_ZOOM, Math.min(getGreatestDistance(boundingBox) / mapWidth, 1f));
     }
 
     private float getGreatestDistance(BoundingBox boundingBox) {
