@@ -42,7 +42,7 @@ class Balloon extends Image {
     }
 
     private ChainShape createEllipse(float width, float height) {
-        int STEPS = 8;
+        int STEPS = 12;
 
         ChainShape ellipse = new ChainShape();
         Vector2[] vertices = new Vector2[STEPS];

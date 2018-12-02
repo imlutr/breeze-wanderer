@@ -104,6 +104,8 @@ public class Level {
         revoluteJointDef.collideConnected = false;
         revoluteJointDef.localAnchorA.set(0f, 0f);
         revoluteJointDef.localAnchorB.set(0f, 0f);
+        revoluteJointDef.enableMotor = true;
+        revoluteJointDef.maxMotorTorque = 10;
         world.createJoint(revoluteJointDef);
 
         // Render
