@@ -2,6 +2,7 @@ package ro.luca1152.balloon;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Box2D;
@@ -13,6 +14,7 @@ import ro.luca1152.balloon.screens.PlayScreen;
 public class MyGame extends Game {
     // Constants
     public static final float PPM = 64f; // Pixels per meter
+    public static final Color finishGreen = new Color(0 / 255f, 181 / 255f, 60 / 255f, 1f);
 
     // Tools
     public static MyGame instance;

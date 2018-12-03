@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
@@ -136,10 +137,18 @@ public class Level {
     }
 
     public void draw() {
+        // Prerequisites
         MyGame.batch.setProjectionMatrix(gameStage.getCamera().combined);
         mapRenderer.setView((OrthographicCamera) gameStage.getCamera());
+
+        // Draw every actor
         gameStage.draw();
+
+        // Reset the color in case there are any colored Actors
+        mapRenderer.getBatch().setColor(Color.WHITE);
         mapRenderer.render();
+
+        // Shows the Box2D debug guides
 //        MyGame.debugRenderer.render(world, gameStage.getCamera().combined);
     }
 
