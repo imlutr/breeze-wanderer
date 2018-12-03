@@ -1,10 +1,13 @@
 package ro.luca1152.balloon.entities;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -13,7 +16,7 @@ import ro.luca1152.balloon.MyGame;
 import ro.luca1152.balloon.utils.MapBodyBuilder;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class AirBlower extends Image {
+public class AirBlower extends Group {
     // Constants
     private final float WIDTH = 1f, HEIGHT = 1f;
 
@@ -25,13 +28,13 @@ public class AirBlower extends Image {
     private Body body;
 
     AirBlower(World world, RectangleMapObject mapObject) {
-        super(MyGame.manager.get("textures/fan.png", Texture.class));
-
-        // Image
-        this.setSize(WIDTH, HEIGHT);
-        this.setPosition(mapObject.getRectangle().x / MyGame.PPM, mapObject.getRectangle().y / MyGame.PPM);
-        this.setOrigin(WIDTH / 2f, HEIGHT / 2f);
-        this.setTouchable(Touchable.enabled);
+        // Fan image
+        Image fan = new Image(MyGame.manager.get("textures/fan.png", Texture.class));
+        fan.setSize(WIDTH, HEIGHT);
+        fan.setPosition(mapObject.getRectangle().x / MyGame.PPM, mapObject.getRectangle().y / MyGame.PPM);
+        fan.setOrigin(WIDTH / 2f, HEIGHT / 2f);
+        fan.setTouchable(Touchable.enabled);
+        addActor(fan);
 
         // Box2D
         BodyDef bodyDef = new BodyDef();
@@ -42,12 +45,32 @@ public class AirBlower extends Image {
         fixtureDef.shape = MapBodyBuilder.getRectangle(mapObject);
         body.createFixture(fixtureDef);
 
+        // Highlight
+        Highlight highlight = new Highlight(MapBodyBuilder.getInformation(mapObject), new Color(43 / 255f, 43 / 255f, 45 / 255f, .6f));
+        highlight.setVisible(false);
+        addActor(highlight);
+
         // Listener
         addListener(new ClickListener() {
             @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                highlight.setVisible(true);
+                super.enter(event, x, y, pointer, fromActor);
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                // Don't remove the highlight if it was clicked on the fan
+                if (pointer == -1)
+                    highlight.setVisible(false);
+
+                super.exit(event, x, y, pointer, toActor);
+            }
+
+            @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                explode(world, 32, 4f, 150f, getX() + getOriginX(), getY() + getOriginY());
-                return true;
+                explode(world, 32, 6f, 150f, fan.getX() + fan.getOriginX(), fan.getY() + fan.getOriginY());
+                return super.touchDown(event, x, y, pointer, button);
             }
         });
     }
@@ -81,6 +104,7 @@ public class AirBlower extends Image {
     private void applyBlastImpulse(Body body, Vector2 blastCenter, Vector2 applyPoint, float blastPower) {
         Vector2 blastDir = applyPoint.cpy().sub(blastCenter);
         float distance = blastDir.len();
+        System.out.println(distance);
         if (distance == 0) return; // So 1 / distance is valid
         float impulseMag = Math.min(blastPower * (1f / distance), blastPower * 0.5f);
         body.applyLinearImpulse(blastDir.nor().scl(impulseMag), applyPoint, true);

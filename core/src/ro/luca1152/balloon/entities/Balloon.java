@@ -37,6 +37,7 @@ class Balloon extends Image {
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = createEllipse(WIDTH / 2f, HEIGHT / 2f);
+        fixtureDef.density = .1f;
         fixtureDef.friction = 0f;
         body.createFixture(fixtureDef);
         body.setTransform(getX() + getWidth() / 2f, getY() + getHeight() / 2f, 0f);
@@ -77,7 +78,7 @@ class Balloon extends Image {
     @Override
     public void act(float delta) {
         super.act(delta);
-        body.applyForce(new Vector2(0, 18f), body.getWorldCenter(), true);
+        body.applyForce(new Vector2(0, 15f), body.getWorldCenter(), true);
         body.getLinearVelocity().y = Math.max(body.getLinearVelocity().y, 2.5f);
         setPosition(body.getWorldCenter().x - WIDTH / 2f, body.getWorldCenter().y - HEIGHT / 2f);
         setRotation(body.getAngle() * MathUtils.radDeg);
