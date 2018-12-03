@@ -61,10 +61,10 @@ public class Level {
 
     // Entities
     private Array<Balloon> balloons;
+    private Array<Finish> finishes;
     private Array<AirBlower> airBlowers;
     private Array<Hinge> hinges;
     private Array<RotatingPlatform> rotatingPlatforms;
-    private Finish finish;
 
     public Level(int levelNumber) {
         // TiledMap
@@ -134,8 +134,15 @@ public class Level {
         }
 
         // Finish
-        finish = new Finish(MapBodyBuilder.getInformation((RectangleMapObject) tiledMap.getLayers().get("Finish").getObjects().get(0)));
-        gameStage.addActor(finish);
+        finishes = new Array<>();
+        if (tiledMap.getLayers().get("Finish") != null) {
+            MapObjects finishObjects = tiledMap.getLayers().get("Finish").getObjects();
+            for (int object = 0; object < finishObjects.getCount(); object++) {
+                Finish finish = new Finish(MapBodyBuilder.getInformation((RectangleMapObject) finishObjects.get(object)));
+                gameStage.addActor(finish);
+                finishes.add(finish);
+            }
+        }
 
         // Text
         labelStyle = new Label.LabelStyle(MyGame.manager.get("fonts/DIN1451-26pt.fnt", BitmapFont.class), new Color(0 / 255f, 174 / 255f, 181 / 255f, 1));
@@ -247,18 +254,21 @@ public class Level {
     private void listenForCollisions() {
         // Kinda hacky code for fading out when the player gets inside
         // the finish point and fading back in if it leaves it
+        int numBalloonsInFinishPoint = 0;
         for (Balloon balloon : balloons) {
-            if (balloon.getCollisionBox().overlaps(finish.getCollisionBox())) {
-                if (!isFadingOut) {
-                    shouldFadeOut = true;
-                    isFadingIn = false;
-                }
-            } else if (!isFadingIn) {
-                shouldFadeIn = true;
-                isFadingOut = false;
-            }
+            for (Finish finish : finishes)
+                if (balloon.getCollisionBox().overlaps(finish.getCollisionBox()))
+                    numBalloonsInFinishPoint++;
         }
-
+        if (numBalloonsInFinishPoint != 0) {
+            if (!isFadingOut) {
+                shouldFadeOut = true;
+                isFadingIn = false;
+            }
+        } else if (!isFadingIn) {
+            shouldFadeIn = true;
+            isFadingOut = false;
+        }
         if (shouldFadeOut) {
             shouldFadeOut = false;
             isFadingOut = true;
