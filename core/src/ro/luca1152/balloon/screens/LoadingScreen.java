@@ -10,8 +10,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import ro.luca1152.balloon.MyGame;
 
-import static com.badlogic.gdx.graphics.Texture.TextureFilter.Linear;
-
 @SuppressWarnings({"FieldCanBeLocal", "Duplicates"})
 public class LoadingScreen extends ScreenAdapter {
     private final int MAP_COUNT = 6;
@@ -59,14 +57,8 @@ public class LoadingScreen extends ScreenAdapter {
         if (MyGame.manager.update()) {
             Gdx.app.log("LoadingScreen", "Finished loading assets in " + (int) (timer * 100) / 100f + "s.");
 
-            smoothTextures();
-
             // Start the game
             MyGame.instance.setScreen(MyGame.playScreen);
         }
-    }
-
-    private void smoothTextures() {
-        MyGame.manager.get("textures/balloon.png", Texture.class).setFilter(Linear, Linear);
     }
 }
