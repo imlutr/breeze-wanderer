@@ -35,20 +35,26 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 public class Level {
     // Render
     private final float MIN_ZOOM = .8f, MAX_ZOOM = 1.25f;
+
     // Booleans
     public boolean isFinished = false;
     public boolean restart = false;
+
     // TiledMap
     private TiledMap tiledMap;
     private MapProperties mapProperties;
     private int mapWidth, mapHeight;
+
     // Box2D
     private World world;
+
     // Scene2D
     private Stage gameStage, uiStage, fadeStage;
     private OrthogonalTiledMapRenderer mapRenderer;
-    private Image fadeOut;
 
+    // Fade out
+    private Image fadeOut;
+    private boolean shouldFadeOut = false, isFadingOut = false, shouldFadeIn = false, isFadingIn = false;
 
     // Entities
     private Array<Balloon> balloons;
@@ -56,7 +62,6 @@ public class Level {
     private Array<Hinge> hinges;
     private Array<RotatingPlatform> rotatingPlatforms;
     private Finish finish;
-    private boolean shouldFadeOut = false, isFadingOut = false, shouldFadeIn = false, isFadingIn = false;
 
     public Level(int levelNumber) {
         // TiledMap
@@ -150,7 +155,7 @@ public class Level {
         fadeIn.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         fadeIn.setColor(MyGame.backgroundWhite);
         fadeIn.addAction(sequence(
-                fadeOut(.5f),
+                fadeOut(.7f),
                 removeActor()
                 )
         );
@@ -197,84 +202,37 @@ public class Level {
 //        MyGame.debugRenderer.render(world, gameStage.getCamera().combined);
     }
 
+    public void update(float delta) {
+        gameStage.act(delta);
+        makeCameraFollowBalloons();
+        checkIfFinished();
+        updatePhysics();
+        listenForCollisions();
+        autoRestart();
+        uiStage.act(delta);
+        fadeStage.act(delta);
+    }
+
     private void makeCameraFollowBalloons() {
         if (balloons.size != 0) {
             BoundingBox balloonsBox = getBalloonsBoundingBox(balloons);
-
             Vector3 centerPoint = getBalloonsCenterPoint(balloonsBox);
             gameStage.getCamera().position.slerp(centerPoint, .15f);
             zoomTheCamera(balloonsBox, (OrthographicCamera) gameStage.getCamera());
             keepCameraWithinBounds();
             gameStage.getCamera().update();
         }
-    }
 
-    private BoundingBox getBalloonsBoundingBox(Array<Balloon> balloons) {
-        Vector3 firstBalloonCenter = new Vector3(balloons.get(0).body.getWorldCenter(), 0f);
-        BoundingBox box = new BoundingBox(firstBalloonCenter, firstBalloonCenter);
-        if (balloons.size == 1)
-            return box;
-        else {
-            for (int balloon = 1; balloon < balloons.size; balloon++)
-                box.ext(new Vector3(balloons.get(balloon).body.getWorldCenter(), 0f));
-            return box;
-        }
-    }
-
-    private void zoomTheCamera(BoundingBox boundingBox, OrthographicCamera camera) {
-        if (balloons.size > 1)
-            camera.zoom = MathUtils.lerp(MIN_ZOOM, MAX_ZOOM, Math.min(getGreatestDistance(boundingBox) / mapWidth, 1f));
-    }
-
-
-    private float getGreatestDistance(BoundingBox boundingBox) {
-        return Math.max(boundingBox.getWidth(), boundingBox.getHeight());
-    }
-
-    private Vector3 getBalloonsCenterPoint(BoundingBox boundingBox) {
-        Vector3 center = new Vector3();
-        boundingBox.getCenter(center);
-        return center;
-    }
-
-    private void keepCameraWithinBounds() {
-        OrthographicCamera camera = (OrthographicCamera) gameStage.getCamera();
-
-        float mapLeft = 0f, mapRight = mapWidth;
-        if (mapWidth > camera.viewportWidth) {
-            mapLeft = -1;
-            mapRight = mapWidth + 1;
-        }
-        float mapBottom = 0f, mapTop = mapHeight;
-        float cameraHalfWidth = camera.viewportWidth / 2f, cameraHalfHeight = camera.viewportHeight / 2f;
-        float cameraLeft = camera.position.x - cameraHalfWidth, cameraRight = camera.position.x - cameraHalfWidth;
-        float cameraBottom = camera.position.y - cameraHalfHeight, cameraTop = camera.position.y + cameraHalfHeight;
-
-        // Clam horizontal axis
-        if (camera.viewportWidth > mapRight) camera.position.x = mapRight / 2f;
-        else if (cameraLeft <= mapLeft) camera.position.x = mapLeft + cameraHalfWidth;
-        else if (cameraRight >= mapRight) camera.position.x = mapRight - cameraHalfWidth;
-
-        // Clamp vertical axis
-        if (camera.viewportHeight > mapTop) camera.position.y = mapTop / 2f;
-        else if (cameraBottom <= mapBottom) camera.position.y = mapBottom + cameraHalfHeight;
-        else if (cameraTop >= mapTop) camera.position.y = mapTop - cameraHalfHeight;
-    }
-
-    public void update(float delta) {
-        gameStage.act(delta);
-        listenForCollisions();
-        makeCameraFollowBalloons();
         uiStage.getCamera().position.set(gameStage.getCamera().position.x * MyGame.PPM, gameStage.getCamera().position.y * MyGame.PPM, 0f);
-        checkIfFinished();
-        world.step(1 / 60f, 6, 2);
-        uiStage.act(delta);
-        fadeStage.act(delta);
     }
 
     private void checkIfFinished() {
         if (Math.abs(fadeOut.getColor().a - 1f) <= 2f / 255f)
             isFinished = true;
+    }
+
+    private void updatePhysics() {
+        world.step(1 / 60f, 6, 2);
     }
 
     private void listenForCollisions() {
@@ -306,8 +264,68 @@ public class Level {
         }
     }
 
+    private void autoRestart() {
+        int numBalloonsOutsideBounds = 0;
+        for (int i = 0; i < balloons.size; i++)
+            if (balloons.get(i).body.getPosition().y - mapHeight >= 1.5f)
+                numBalloonsOutsideBounds++;
+        if (numBalloonsOutsideBounds == balloons.size)
+            restart = true;
+    }
+
+    private BoundingBox getBalloonsBoundingBox(Array<Balloon> balloons) {
+        Vector3 firstBalloonCenter = new Vector3(balloons.get(0).body.getWorldCenter(), 0f);
+        BoundingBox box = new BoundingBox(firstBalloonCenter, firstBalloonCenter);
+        if (balloons.size == 1)
+            return box;
+        else {
+            for (int balloon = 1; balloon < balloons.size; balloon++)
+                box.ext(new Vector3(balloons.get(balloon).body.getWorldCenter(), 0f));
+            return box;
+        }
+    }
+
+    private Vector3 getBalloonsCenterPoint(BoundingBox boundingBox) {
+        Vector3 center = new Vector3();
+        boundingBox.getCenter(center);
+        return center;
+    }
+
+    private void zoomTheCamera(BoundingBox boundingBox, OrthographicCamera camera) {
+        if (balloons.size > 1)
+            camera.zoom = MathUtils.lerp(MIN_ZOOM, MAX_ZOOM, Math.min(getGreatestDistance(boundingBox) / mapWidth, 1f));
+    }
+
+    private void keepCameraWithinBounds() {
+        OrthographicCamera camera = (OrthographicCamera) gameStage.getCamera();
+
+        float mapLeft = 0f, mapRight = mapWidth;
+        if (mapWidth > camera.viewportWidth) {
+            mapLeft = -1;
+            mapRight = mapWidth + 1;
+        }
+        float mapBottom = 0f, mapTop = mapHeight;
+        float cameraHalfWidth = camera.viewportWidth / 2f, cameraHalfHeight = camera.viewportHeight / 2f;
+        float cameraLeft = camera.position.x - cameraHalfWidth, cameraRight = camera.position.x - cameraHalfWidth;
+        float cameraBottom = camera.position.y - cameraHalfHeight, cameraTop = camera.position.y + cameraHalfHeight;
+
+        // Clam horizontal axis
+        if (camera.viewportWidth > mapRight) camera.position.x = mapRight / 2f;
+        else if (cameraLeft <= mapLeft) camera.position.x = mapLeft + cameraHalfWidth;
+        else if (cameraRight >= mapRight) camera.position.x = mapRight - cameraHalfWidth;
+
+        // Clamp vertical axis
+        if (camera.viewportHeight > mapTop) camera.position.y = mapTop / 2f;
+        else if (cameraBottom <= mapBottom) camera.position.y = mapBottom + cameraHalfHeight;
+        else if (cameraTop >= mapTop) camera.position.y = mapTop - cameraHalfHeight;
+    }
+
     private void removeAllActions(Actor actor) {
         for (int i = 0; i < actor.getActions().size; i++)
             actor.removeAction(actor.getActions().get(i));
+    }
+
+    private float getGreatestDistance(BoundingBox boundingBox) {
+        return Math.max(boundingBox.getWidth(), boundingBox.getHeight());
     }
 }

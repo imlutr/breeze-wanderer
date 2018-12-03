@@ -14,11 +14,11 @@ class Balloon extends Image {
     // Constants
     private final float WIDTH = 1.05f, HEIGHT = 1.35f;
 
-    // Collisions
-    private Rectangle collisionBox;
-
     // Box2D
     Body body;
+
+    // Collisions
+    private Rectangle collisionBox;
 
     Balloon(World world, Rectangle rectangle) {
         super(MyGame.manager.get("textures/balloon.png", Texture.class));

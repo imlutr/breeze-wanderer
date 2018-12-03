@@ -17,12 +17,12 @@ import ro.luca1152.balloon.utils.MapBodyBuilder;
 
 @SuppressWarnings("FieldCanBeLocal")
 class AirBlower extends Group {
-    // Constants
-    private final float WIDTH = 1f, HEIGHT = 1f;
-
     // Explosion
     private static Vector2 closestPoint;
     private static Fixture closestFixture;
+
+    // Constants
+    private final float WIDTH = 1f, HEIGHT = 1f;
 
     // Box2D
     private Body body;
