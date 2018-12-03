@@ -36,10 +36,6 @@ public class Level {
     // Constants
     private final float MIN_ZOOM = .8f, MAX_ZOOM = 1.25f;
 
-    // Booleans
-    public boolean isFinished = false;
-    public boolean restart = false;
-
     // TiledMap
     private TiledMap tiledMap;
     private MapProperties mapProperties;
@@ -58,6 +54,12 @@ public class Level {
     // Fade out
     private Image fadeOut;
     private boolean shouldFadeOut = false, isFadingOut = false, shouldFadeIn = false, isFadingIn = false;
+
+    // Restart
+    public boolean restart = false, shouldRestart = false;
+
+    // Finish
+    public boolean isFinished = false;
 
     // Entities
     private Array<Balloon> balloons;
@@ -171,7 +173,7 @@ public class Level {
         fadeIn.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         fadeIn.setColor(MyGame.backgroundWhite);
         fadeIn.addAction(sequence(
-                fadeOut(.7f),
+                fadeOut(.5f),
                 removeActor()
                 )
         );
@@ -194,7 +196,7 @@ public class Level {
                     @Override
                     public boolean keyDown(int keycode) {
                         if (keycode == Input.Keys.R)
-                            restart = true;
+                            shouldRestart = true;
                         return true;
                     }
                 }));
@@ -238,7 +240,6 @@ public class Level {
             keepCameraWithinBounds();
             gameStage.getCamera().update();
         }
-
         cameraTextStage.getCamera().position.set(gameStage.getCamera().position.x * MyGame.PPM, gameStage.getCamera().position.y * MyGame.PPM, 0f);
     }
 
@@ -269,11 +270,20 @@ public class Level {
             shouldFadeIn = true;
             isFadingOut = false;
         }
-        if (shouldFadeOut) {
+        if (shouldFadeOut || shouldRestart) {
             shouldFadeOut = false;
             isFadingOut = true;
             removeAllActions(fadeOut);
             fadeOut.addAction(sequence(fadeIn(.5f)));
+            if (shouldRestart) {
+                shouldRestart = false;
+                fadeOut.addAction(after(run(new Runnable() {
+                    @Override
+                    public void run() {
+                        restart = true;
+                    }
+                })));
+            }
         }
         if (shouldFadeIn) {
             shouldFadeIn = false;
