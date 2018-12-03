@@ -14,7 +14,7 @@ import ro.luca1152.balloon.screens.PlayScreen;
 public class MyGame extends Game {
     // Constants
     public static final float PPM = 64f; // Pixels per meter
-    public static final Color finishGreen = new Color(0 / 255f, 181 / 255f, 60 / 255f, 1f);
+    public static final Color platformBlue = new Color(0 / 255f, 174 / 255f, 181 / 255f, 1f);
     public static final Color backgroundWhite = new Color(238 / 255f, 238 / 255f, 238 / 255f, 1f);
 
     // Tools

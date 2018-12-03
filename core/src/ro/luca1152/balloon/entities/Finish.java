@@ -14,19 +14,19 @@ class Finish extends Group {
         Image color = new Image(MyGame.manager.get("textures/pixel.png", Texture.class));
         color.setSize(information.getWidth(), information.getHeight());
         color.setPosition(information.getX(), information.getY());
-        color.setColor(MyGame.finishGreen);
+        color.setColor(MyGame.platformBlue);
         color.getColor().a = .1f;
         addActor(color);
 
         // Highlight
-        Highlight highlight = new Highlight(information, MyGame.finishGreen);
+        Highlight highlight = new Highlight(information, MyGame.platformBlue);
         addActor(highlight);
 
         // Center
         Image center = new Image(MyGame.manager.get("textures/finish-center.png", Texture.class));
         center.setSize(center.getWidth() / MyGame.PPM, center.getHeight() / MyGame.PPM);
         center.setPosition(information.x + information.width / 2f - center.getWidth() / 2f, information.y + information.height / 2f - center.getHeight() / 2f);
-        center.setColor(MyGame.finishGreen);
+        center.setColor(MyGame.platformBlue);
         addActor(center);
 
         // Collisions
