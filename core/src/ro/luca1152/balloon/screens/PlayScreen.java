@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import ro.luca1152.balloon.MyGame;
 import ro.luca1152.balloon.entities.Level;
 
+@SuppressWarnings("Duplicates")
 public class PlayScreen extends ScreenAdapter {
     // Level
     private int levelNumber = 1;

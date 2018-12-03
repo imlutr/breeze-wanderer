@@ -7,6 +7,7 @@ import ro.luca1152.balloon.MyGame;
 public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.initialBackgroundColor = MyGame.backgroundWhite;
         config.title = "Balloons";
         config.width = 640;
         config.height = 640;
