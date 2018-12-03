@@ -68,6 +68,58 @@ public class Level {
     private Array<Hinge> hinges;
     private Array<RotatingPlatform> rotatingPlatforms;
 
+    private Array<Balloon> balloonsToRemove = new Array<>();
+
+    public void draw() {
+        // Prerequisites
+        MyGame.batch.setProjectionMatrix(gameStage.getCamera().combined);
+        mapRenderer.setView((OrthographicCamera) gameStage.getCamera());
+
+        // Reset the color in case there are any colored Actors
+        mapRenderer.getBatch().setColor(Color.WHITE);
+        mapRenderer.render();
+
+        // Draw every actor
+        gameStage.draw();
+        cameraTextStage.draw();
+        staticTextStage.draw();
+
+        // Shows the Box2D debug guides
+//        MyGame.debugRenderer.render(world, gameStage.getCamera().combined);
+    }
+
+    public void update(float delta) {
+        gameStage.act(delta);
+        makeCameraFollowBalloons();
+        checkIfFinished();
+        updatePhysics();
+        listenForCollisions();
+        autoRestart();
+        cameraTextStage.act(delta);
+        staticTextStage.act(delta);
+    }
+
+    private void makeCameraFollowBalloons() {
+        if (balloons.size != 0) {
+            BoundingBox balloonsBox = getBalloonsBoundingBox(balloons);
+            Vector3 centerPoint = getBalloonsCenterPoint(balloonsBox);
+            gameStage.getCamera().position.slerp(centerPoint, .15f);
+//            zoomTheCamera(balloonsBox, (OrthographicCamera) gameStage.getCamera());
+            keepCameraWithinBounds();
+            gameStage.getCamera().update();
+        }
+        cameraTextStage.getCamera().position.set(gameStage.getCamera().position.x * MyGame.PPM, gameStage.getCamera().position.y * MyGame.PPM, 0f);
+    }
+
+    private void checkIfFinished() {
+        if (Math.abs(fadeOut.getColor().a - 1f) <= 2f / 255f)
+            isFinished = true;
+    }
+
+    private void updatePhysics() {
+        world.step(1 / 60f, 6, 2);
+    }
+
     public Level(int levelNumber) {
         // TiledMap
         tiledMap = MyGame.manager.get("maps/map-" + levelNumber + ".tmx", TiledMap.class);
@@ -173,7 +225,7 @@ public class Level {
         fadeIn.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         fadeIn.setColor(MyGame.backgroundWhite);
         fadeIn.addAction(sequence(
-                fadeOut(.5f),
+                fadeOut(.4f),
                 removeActor()
                 )
         );
@@ -202,56 +254,6 @@ public class Level {
                 }));
     }
 
-    public void draw() {
-        // Prerequisites
-        MyGame.batch.setProjectionMatrix(gameStage.getCamera().combined);
-        mapRenderer.setView((OrthographicCamera) gameStage.getCamera());
-
-        // Reset the color in case there are any colored Actors
-        mapRenderer.getBatch().setColor(Color.WHITE);
-        mapRenderer.render();
-
-        // Draw every actor
-        gameStage.draw();
-        cameraTextStage.draw();
-        staticTextStage.draw();
-
-        // Shows the Box2D debug guides
-//        MyGame.debugRenderer.render(world, gameStage.getCamera().combined);
-    }
-
-    public void update(float delta) {
-        gameStage.act(delta);
-        makeCameraFollowBalloons();
-        checkIfFinished();
-        updatePhysics();
-        listenForCollisions();
-        autoRestart();
-        cameraTextStage.act(delta);
-        staticTextStage.act(delta);
-    }
-
-    private void makeCameraFollowBalloons() {
-        if (balloons.size != 0) {
-            BoundingBox balloonsBox = getBalloonsBoundingBox(balloons);
-            Vector3 centerPoint = getBalloonsCenterPoint(balloonsBox);
-            gameStage.getCamera().position.slerp(centerPoint, .15f);
-//            zoomTheCamera(balloonsBox, (OrthographicCamera) gameStage.getCamera());
-            keepCameraWithinBounds();
-            gameStage.getCamera().update();
-        }
-        cameraTextStage.getCamera().position.set(gameStage.getCamera().position.x * MyGame.PPM, gameStage.getCamera().position.y * MyGame.PPM, 0f);
-    }
-
-    private void checkIfFinished() {
-        if (Math.abs(fadeOut.getColor().a - 1f) <= 2f / 255f)
-            isFinished = true;
-    }
-
-    private void updatePhysics() {
-        world.step(1 / 60f, 6, 2);
-    }
-
     private void listenForCollisions() {
         // Kinda hacky code for fading out when the player gets inside
         // the finish point and fading back in if it leaves it
@@ -274,15 +276,10 @@ public class Level {
             shouldFadeOut = false;
             isFadingOut = true;
             removeAllActions(fadeOut);
-            fadeOut.addAction(sequence(fadeIn(.5f)));
+            fadeOut.addAction(sequence(fadeIn(.4f)));
             if (shouldRestart) {
                 shouldRestart = false;
-                fadeOut.addAction(after(run(new Runnable() {
-                    @Override
-                    public void run() {
-                        restart = true;
-                    }
-                })));
+                fadeOut.addAction(after(run(() -> restart = true)));
             }
         }
         if (shouldFadeIn) {
@@ -294,11 +291,11 @@ public class Level {
     }
 
     private void autoRestart() {
-        int numBalloonsOutsideBounds = 0;
         for (int i = 0; i < balloons.size; i++)
             if (balloons.get(i).body.getPosition().y - mapHeight >= 1.5f)
-                numBalloonsOutsideBounds++;
-        if (numBalloonsOutsideBounds == balloons.size)
+                balloonsToRemove.add(balloons.get(i));
+        balloons.removeAll(balloonsToRemove, true);
+        if (balloons.size == 0)
             restart = true;
     }
 
