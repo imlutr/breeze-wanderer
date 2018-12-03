@@ -87,6 +87,7 @@ public class Level {
         MapObjects balloonsObjects = tiledMap.getLayers().get("Balloons").getObjects();
         for (int object = 0; object < balloonsObjects.getCount(); object++) {
             Balloon balloon = new Balloon(world, ((RectangleMapObject) balloonsObjects.get(object)).getRectangle());
+            gameStage.getCamera().position.set(balloon.body.getWorldCenter(), 0f);
             balloons.add(balloon);
             gameStage.addActor(balloon);
         }
