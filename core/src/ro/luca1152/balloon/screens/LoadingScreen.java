@@ -14,7 +14,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter.Linear;
 
 @SuppressWarnings({"FieldCanBeLocal", "Duplicates"})
 public class LoadingScreen extends ScreenAdapter {
-    private final int MAP_COUNT = 5;
+    private final int MAP_COUNT = 6;
     private float timer = 0f;
 
     @Override

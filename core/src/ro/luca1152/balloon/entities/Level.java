@@ -236,7 +236,7 @@ public class Level {
             BoundingBox balloonsBox = getBalloonsBoundingBox(balloons);
             Vector3 centerPoint = getBalloonsCenterPoint(balloonsBox);
             gameStage.getCamera().position.slerp(centerPoint, .15f);
-            zoomTheCamera(balloonsBox, (OrthographicCamera) gameStage.getCamera());
+//            zoomTheCamera(balloonsBox, (OrthographicCamera) gameStage.getCamera());
             keepCameraWithinBounds();
             gameStage.getCamera().update();
         }
