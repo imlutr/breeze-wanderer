@@ -16,7 +16,7 @@ import ro.luca1152.balloon.MyGame;
 import ro.luca1152.balloon.utils.MapBodyBuilder;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class AirBlower extends Group {
+class AirBlower extends Group {
     // Constants
     private final float WIDTH = 1f, HEIGHT = 1f;
 
@@ -26,6 +26,10 @@ public class AirBlower extends Group {
 
     // Box2D
     private Body body;
+
+    // Highlight
+    private Highlight highlight;
+
 
     AirBlower(World world, RectangleMapObject mapObject) {
         // Fan image
@@ -46,7 +50,7 @@ public class AirBlower extends Group {
         body.createFixture(fixtureDef);
 
         // Highlight
-        Highlight highlight = new Highlight(MapBodyBuilder.getInformation(mapObject), new Color(43 / 255f, 43 / 255f, 45 / 255f, .6f));
+        highlight = new Highlight(MapBodyBuilder.getInformation(mapObject), new Color(43 / 255f, 43 / 255f, 45 / 255f, .6f));
         highlight.setVisible(false);
         addActor(highlight);
 
@@ -101,17 +105,12 @@ public class AirBlower extends Group {
         }
     }
 
+
     private void applyBlastImpulse(Body body, Vector2 blastCenter, Vector2 applyPoint, float blastPower) {
         Vector2 blastDir = applyPoint.cpy().sub(blastCenter);
         float distance = blastDir.len();
-        System.out.println(distance);
         if (distance == 0) return; // So 1 / distance is valid
         float impulseMag = Math.min(blastPower * (1f / distance), blastPower * 0.5f);
         body.applyLinearImpulse(blastDir.nor().scl(impulseMag), applyPoint, true);
-    }
-
-    @Override
-    public void act(float delta) {
-        super.act(delta);
     }
 }

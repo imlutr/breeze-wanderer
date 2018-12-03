@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -17,10 +18,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import ro.luca1152.balloon.MyGame;
@@ -30,24 +33,22 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class Level {
+    // Render
+    private final float MIN_ZOOM = .8f, MAX_ZOOM = 1.25f;
     // Booleans
     public boolean isFinished = false;
     public boolean restart = false;
-
     // TiledMap
     private TiledMap tiledMap;
     private MapProperties mapProperties;
     private int mapWidth, mapHeight;
-
     // Box2D
     private World world;
-
     // Scene2D
-    private Stage gameStage, uiStage;
-
-    // Render
-    private final float MIN_ZOOM = .5f, MAX_ZOOM = 1.25f;
+    private Stage gameStage, uiStage, fadeStage;
     private OrthogonalTiledMapRenderer mapRenderer;
+    private Image fadeOut;
+
 
     // Entities
     private Array<Balloon> balloons;
@@ -55,6 +56,7 @@ public class Level {
     private Array<Hinge> hinges;
     private Array<RotatingPlatform> rotatingPlatforms;
     private Finish finish;
+    private boolean shouldFadeOut = false, isFadingOut = false, shouldFadeIn = false, isFadingIn = false;
 
     public Level(int levelNumber) {
         // TiledMap
@@ -65,11 +67,12 @@ public class Level {
 
         // Box2D
         world = new World(new Vector2(0, -10f), true);
-        Array<Body> solids = MapBodyBuilder.buildSolids(tiledMap, MyGame.PPM, world);
+        MapBodyBuilder.buildSolids(tiledMap, MyGame.PPM, world);
 
         // Scene2D
         gameStage = new Stage(new FitViewport(10f, 10f), MyGame.batch);
         uiStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), MyGame.batch);
+        fadeStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), MyGame.batch);
 
         // Balloons
         balloons = new Array<>();
@@ -125,6 +128,23 @@ public class Level {
         finish = new Finish(MapBodyBuilder.getInformation((RectangleMapObject) tiledMap.getLayers().get("Finish").getObjects().get(0)));
         gameStage.addActor(finish);
 
+        // Text
+        Label.LabelStyle labelStyle = new Label.LabelStyle(MyGame.manager.get("fonts/DIN1451-26pt.fnt", BitmapFont.class), new Color(0 / 255f, 174 / 255f, 181 / 255f, 1));
+        if (tiledMap.getLayers().get("Text") != null) {
+            MapObjects textObjects = tiledMap.getLayers().get("Text").getObjects();
+            for (int object = 0; object < textObjects.getCount(); object++) {
+                String text = (String) textObjects.get(object).getProperties().get("text");
+                Rectangle information = ((RectangleMapObject) textObjects.get(object)).getRectangle();
+
+                Label label = new Label(text, labelStyle);
+                label.setPosition(information.getX(), information.getY());
+                label.setSize(information.getWidth(), information.getHeight());
+                label.setWrap(true);
+                label.setAlignment(Align.center, Align.center);
+                uiStage.addActor(label);
+            }
+        }
+
         // Fade-in effect
         Image fadeIn = new Image(MyGame.manager.get("textures/pixel.png", Texture.class));
         fadeIn.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -134,7 +154,14 @@ public class Level {
                 removeActor()
                 )
         );
-        uiStage.addActor(fadeIn);
+        fadeStage.addActor(fadeIn);
+
+        // Fade-out effect
+        fadeOut = new Image(MyGame.manager.get("textures/pixel.png", Texture.class));
+        fadeOut.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        fadeOut.setColor(MyGame.backgroundWhite);
+        fadeOut.getColor().a = 0f;
+        fadeStage.addActor(fadeOut);
 
         // Render
         mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / MyGame.PPM, MyGame.batch);
@@ -164,17 +191,10 @@ public class Level {
         // Draw every actor
         gameStage.draw();
         uiStage.draw();
+        fadeStage.draw();
 
         // Shows the Box2D debug guides
 //        MyGame.debugRenderer.render(world, gameStage.getCamera().combined);
-    }
-
-    public void update(float delta) {
-        gameStage.act(delta);
-        listenForCollisions();
-        makeCameraFollowBalloons();
-        world.step(1 / 60f, 6, 2);
-        uiStage.act(delta);
     }
 
     private void makeCameraFollowBalloons() {
@@ -205,6 +225,7 @@ public class Level {
         if (balloons.size > 1)
             camera.zoom = MathUtils.lerp(MIN_ZOOM, MAX_ZOOM, Math.min(getGreatestDistance(boundingBox) / mapWidth, 1f));
     }
+
 
     private float getGreatestDistance(BoundingBox boundingBox) {
         return Math.max(boundingBox.getWidth(), boundingBox.getHeight());
@@ -240,22 +261,53 @@ public class Level {
         else if (cameraTop >= mapTop) camera.position.y = mapTop - cameraHalfHeight;
     }
 
+    public void update(float delta) {
+        gameStage.act(delta);
+        listenForCollisions();
+        makeCameraFollowBalloons();
+        uiStage.getCamera().position.set(gameStage.getCamera().position.x * MyGame.PPM, gameStage.getCamera().position.y * MyGame.PPM, 0f);
+        checkIfFinished();
+        world.step(1 / 60f, 6, 2);
+        uiStage.act(delta);
+        fadeStage.act(delta);
+    }
+
+    private void checkIfFinished() {
+        if (Math.abs(fadeOut.getColor().a - 1f) <= 2f / 255f)
+            isFinished = true;
+    }
+
     private void listenForCollisions() {
-        if (!restart)
-            for (Balloon balloon : balloons) {
-                if (balloon.getCollisionBox().overlaps(finish.getCollisionBox())) {
-                    // Fade-out effect;
-                    Image fadeOut = new Image(MyGame.manager.get("textures/pixel.png", Texture.class));
-                    fadeOut.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-                    fadeOut.setColor(MyGame.backgroundWhite);
-                    fadeOut.getColor().a = 0f;
-                    fadeOut.addAction(sequence(
-                            fadeIn(.5f),
-                            run(() -> isFinished = true),
-                            removeActor()
-                    ));
-                    uiStage.addActor(fadeOut);
+        // Kinda hacky code for fading out when the player gets inside
+        // the finish point and fading back in if it leaves it
+        for (Balloon balloon : balloons) {
+            if (balloon.getCollisionBox().overlaps(finish.getCollisionBox())) {
+                if (!isFadingOut) {
+                    shouldFadeOut = true;
+                    isFadingIn = false;
                 }
+            } else if (!isFadingIn) {
+                shouldFadeIn = true;
+                isFadingOut = false;
             }
+        }
+
+        if (shouldFadeOut) {
+            shouldFadeOut = false;
+            isFadingOut = true;
+            removeAllActions(fadeOut);
+            fadeOut.addAction(sequence(fadeIn(.5f)));
+        }
+        if (shouldFadeIn) {
+            shouldFadeIn = false;
+            isFadingIn = true;
+            removeAllActions(fadeOut);
+            fadeOut.addAction(fadeOut(fadeOut.getColor().a));
+        }
+    }
+
+    private void removeAllActions(Actor actor) {
+        for (int i = 0; i < actor.getActions().size; i++)
+            actor.removeAction(actor.getActions().get(i));
     }
 }

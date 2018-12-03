@@ -4,9 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import ro.luca1152.balloon.MyGame;
+
+import static com.badlogic.gdx.graphics.Texture.TextureFilter.Linear;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class LoadingScreen extends ScreenAdapter {
@@ -17,6 +20,7 @@ public class LoadingScreen extends ScreenAdapter {
     public void show() {
         loadTextures();
         loadMaps();
+        loadFonts();
     }
 
     private void loadTextures() {
@@ -36,6 +40,10 @@ public class LoadingScreen extends ScreenAdapter {
             MyGame.manager.load("maps/map-" + map + ".tmx", TiledMap.class);
     }
 
+    private void loadFonts() {
+        MyGame.manager.load("fonts/DIN1451-26pt.fnt", BitmapFont.class);
+    }
+
     @Override
     public void render(float delta) {
         timer += delta;
@@ -44,8 +52,22 @@ public class LoadingScreen extends ScreenAdapter {
         if (MyGame.manager.update()) {
             Gdx.app.log("LoadingScreen", "Finished loading assets in " + (int) (timer * 100) / 100f + "s.");
 
+            // Smooth the textures
+            setFilters();
+
             // Start the game
             MyGame.instance.setScreen(MyGame.playScreen);
         }
+    }
+
+    private void setFilters() {
+        MyGame.manager.get("textures/balloon.png", Texture.class).setFilter(Linear, Linear);
+        MyGame.manager.get("textures/highlight-bl.png", Texture.class).setFilter(Linear, Linear);
+        MyGame.manager.get("textures/highlight-br.png", Texture.class).setFilter(Linear, Linear);
+        MyGame.manager.get("textures/highlight-tl.png", Texture.class).setFilter(Linear, Linear);
+        MyGame.manager.get("textures/highlight-tr.png", Texture.class).setFilter(Linear, Linear);
+        MyGame.manager.get("textures/finish-center.png", Texture.class).setFilter(Linear, Linear);
+        MyGame.manager.get("textures/fan.png", Texture.class).setFilter(Linear, Linear);
+        MyGame.manager.get("textures/pixel.png", Texture.class).setFilter(Linear, Linear);
     }
 }
