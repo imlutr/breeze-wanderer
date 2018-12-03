@@ -2,9 +2,22 @@
 <map version="1.2" tiledversion="2018.11.29" orientation="orthogonal" renderorder="right-down" width="17" height="14" tilewidth="64" tileheight="64" infinite="0" nextlayerid="15" nextobjectid="41">
  <tileset firstgid="1" source="pack.tsx"/>
  <layer id="14" name="Solid Tiles" width="17" height="14">
-  <data encoding="base64" compression="zlib">
-   eJxjYBg6gAMHGxlwATEzEuZEk2dDYrPjMANdnAeIWfC4C90OfGbjAtjUk2oGNreA3I4cHvj8QYm9lAJQvKG7jVR3sBEpNhwAAJYXALk=
-  </data>
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,8,0,0,8,0,0,0,0,
+0,10,3,3,3,9,0,0,0,6,0,0,7,0,0,0,0,
+0,7,0,0,0,12,4,0,0,0,0,0,0,9,0,0,0,
+0,7,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,
+0,7,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,
+0,12,3,3,3,4,0,0,0,0,0,0,0,0,7,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,10,4,0,0,0,7,0,0,
+0,0,0,0,0,0,0,0,0,6,0,0,0,0,6,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
  </layer>
  <objectgroup id="11" name="Balloons">
   <object id="18" x="744.833" y="672.667" width="67" height="86"/>

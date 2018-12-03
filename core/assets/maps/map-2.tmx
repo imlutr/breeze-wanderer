@@ -23,8 +23,20 @@
   <object id="14" x="64" y="448" width="64" height="64"/>
  </objectgroup>
  <layer id="8" name="Solid Tiles" width="9" height="13">
-  <data encoding="base64" compression="zlib">
-   eJxjYKAdYAJiZiBmGaLmD1UAABiMABM=
-  </data>
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,2,3,4,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,2,3,4,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
  </layer>
 </map>

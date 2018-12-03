@@ -16,17 +16,17 @@
   <object id="1" x="397.333" y="118.667" width="122.667" height="198.667"/>
  </objectgroup>
  <objectgroup id="7" name="Text">
-  <object id="13" x="191.167" y="7.16633" width="229.667" height="67">
+  <object id="13" x="173.167" y="7.16633" width="229.667" height="67">
    <properties>
-    <property name="text" value="The green object is the finish point"/>
+    <property name="text" value="The green rectangle is the finish point"/>
    </properties>
-   <text fontfamily="Alte DIN 1451 Mittelschrift" pixelsize="27" wrap="1" color="#00aeb5" halign="center">The green object is the finish point</text>
+   <text fontfamily="Alte DIN 1451 Mittelschrift" pixelsize="27" wrap="1" color="#00aeb5" halign="center">The green rectangle is the finish point</text>
   </object>
   <object id="14" x="151.833" y="319.833" width="273.667" height="68.3333">
    <properties>
-    <property name="text" value="Tap on the yellow fan to push the balloon"/>
+    <property name="text" value="Tap on the blue fan to push the balloon"/>
    </properties>
-   <text fontfamily="Alte DIN 1451 Mittelschrift" pixelsize="27" wrap="1" color="#00aeb5" halign="center">Tap on the yellow fan to push the balloon</text>
+   <text fontfamily="Alte DIN 1451 Mittelschrift" pixelsize="27" wrap="1" color="#00aeb5" halign="center">Tap on the blue fan to push the balloon</text>
   </object>
  </objectgroup>
  <objectgroup id="3" name="Balloons">
