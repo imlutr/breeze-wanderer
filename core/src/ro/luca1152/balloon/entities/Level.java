@@ -172,7 +172,7 @@ public class Level {
                 new InputAdapter() {
                     @Override
                     public boolean keyDown(int keycode) {
-                        if (keycode == Input.Keys.SPACE)
+                        if (keycode == Input.Keys.R)
                             restart = true;
                         return true;
                     }

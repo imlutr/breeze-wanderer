@@ -38,7 +38,7 @@ class Balloon extends Image {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = createEllipse(WIDTH / 2f, HEIGHT / 2f);
         fixtureDef.density = .1f;
-        fixtureDef.friction = 0f;
+        fixtureDef.friction = .2f;
         body.createFixture(fixtureDef);
         body.setTransform(getX() + getWidth() / 2f, getY() + getHeight() / 2f, 0f);
         body.setLinearDamping(.15f);
