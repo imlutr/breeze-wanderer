@@ -26,6 +26,6 @@
   <object id="26" x="734.5" y="672" width="67" height="86"/>
  </objectgroup>
  <objectgroup id="13" name="Finish">
-  <object id="27" x="166.667" y="425.333" width="128" height="318"/>
+  <object id="27" x="160" y="425.333" width="128" height="318"/>
  </objectgroup>
 </map>

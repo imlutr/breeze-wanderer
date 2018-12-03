@@ -11,6 +11,13 @@ class Finish extends Group {
     private Rectangle collisionBox;
 
     Finish(Rectangle information) {
+        Image color = new Image(MyGame.manager.get("textures/pixel.png", Texture.class));
+        color.setSize(information.getWidth(), information.getHeight());
+        color.setPosition(information.getX(), information.getY());
+        color.setColor(MyGame.finishGreen);
+        color.getColor().a = .1f;
+        addActor(color);
+
         // Highlight
         Highlight highlight = new Highlight(information, MyGame.finishGreen);
         addActor(highlight);
