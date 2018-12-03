@@ -73,7 +73,7 @@ class AirBlower extends Group {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                explode(world, 32, 6f, 150f, fan.getX() + fan.getOriginX(), fan.getY() + fan.getOriginY());
+                explode(world, 32, 6f, 180f, fan.getX() + fan.getOriginX(), fan.getY() + fan.getOriginY());
                 return super.touchDown(event, x, y, pointer, button);
             }
         });

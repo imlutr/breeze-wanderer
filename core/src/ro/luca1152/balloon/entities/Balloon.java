@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -32,42 +33,53 @@ class Balloon extends Image {
         collisionBox.set(getX(), getY(), getWidth(), getHeight());
 
         // Box2D
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        body = world.createBody(bodyDef);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = createEllipse(WIDTH / 2f, HEIGHT / 2f);
-        fixtureDef.density = .1f;
-        fixtureDef.friction = .2f;
-        body.createFixture(fixtureDef);
-        body.setTransform(getX() + getWidth() / 2f, getY() + getHeight() / 2f, 0f);
-        body.setLinearDamping(.15f);
+        // Top circle
+        BodyDef topCircleBodyDef = new BodyDef();
+        topCircleBodyDef.type = BodyDef.BodyType.DynamicBody;
+        Body topCircleBody = world.createBody(topCircleBodyDef);
+        FixtureDef topCircleFixtureDef = new FixtureDef();
+        CircleShape topCircleShape = new CircleShape();
+        topCircleShape.setPosition(new Vector2(getX() + getWidth() / 2f, getY() + getHeight() / 2f));
+        topCircleShape.setRadius(WIDTH / 2f);
+        topCircleFixtureDef.shape = topCircleShape;
+        topCircleFixtureDef.density = 1f;
+        topCircleFixtureDef.friction = .2f;
+        topCircleBody.createFixture(topCircleFixtureDef);
+        topCircleBody.setFixedRotation(true);
+        topCircleBody.setLinearDamping(.15f);
+        // Bottom circle
+        BodyDef botCircleBodyDef = new BodyDef();
+        botCircleBodyDef.type = BodyDef.BodyType.DynamicBody;
+        Body botCircleBody = world.createBody(botCircleBodyDef);
+        FixtureDef botCircleFixtureDef = new FixtureDef();
+        CircleShape botCircleShape = new CircleShape();
+        botCircleShape.setPosition(new Vector2(getX() + getWidth() / 2f, getY() + .15f));
+        botCircleShape.setRadius((HEIGHT - WIDTH));
+        botCircleFixtureDef.shape = botCircleShape;
+        botCircleFixtureDef.density = 1f;
+        botCircleFixtureDef.friction = .2f;
+        botCircleBody.createFixture(botCircleFixtureDef);
+        botCircleBody.setFixedRotation(true);
+        botCircleBody.setLinearDamping(.15f);
+        // Join the two bodies
+        WeldJointDef jointDef = new WeldJointDef();
+        jointDef.bodyA = topCircleBody;
+        jointDef.bodyB = botCircleBody;
+        world.createJoint(jointDef);
+        // Body
+        body = topCircleBody;
 
         // Listener
         addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 // Remove the balloon if it was touched
-                world.destroyBody(body);
+                world.destroyBody(topCircleBody);
+                world.destroyBody(botCircleBody);
                 remove();
                 return true;
             }
         });
-    }
-
-    private ChainShape createEllipse(float width, float height) {
-        int STEPS = 12;
-
-        ChainShape ellipse = new ChainShape();
-        Vector2[] vertices = new Vector2[STEPS];
-
-        for (int i = 0; i < STEPS; i++) {
-            float t = (float) (i * 2 * Math.PI) / STEPS;
-            vertices[i] = new Vector2(width * (float) Math.cos(t), height * (float) Math.sin(t));
-        }
-
-        ellipse.createLoop(vertices);
-        return ellipse;
     }
 
     Rectangle getCollisionBox() {
@@ -78,9 +90,9 @@ class Balloon extends Image {
     @Override
     public void act(float delta) {
         super.act(delta);
-        body.applyForce(new Vector2(0, 15f), body.getWorldCenter(), true);
+        body.applyForce(new Vector2(0, 18f), body.getWorldCenter(), true);
         body.getLinearVelocity().y = Math.max(body.getLinearVelocity().y, 2.5f);
-        setPosition(body.getWorldCenter().x - WIDTH / 2f, body.getWorldCenter().y - HEIGHT / 2f);
+        setPosition(body.getWorldCenter().x - WIDTH / 2f, body.getWorldCenter().y - HEIGHT / 2f - .15f);
         setRotation(body.getAngle() * MathUtils.radDeg);
     }
 }
