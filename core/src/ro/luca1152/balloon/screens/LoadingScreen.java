@@ -6,13 +6,15 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import ro.luca1152.balloon.MyGame;
 
 @SuppressWarnings({"FieldCanBeLocal", "Duplicates"})
 public class LoadingScreen extends ScreenAdapter {
-    private final int MAP_COUNT = 6;
+    public static NinePatch platformNinePatch;
+    private final int MAP_COUNT = 7;
     private float timer = 0f;
 
     @Override
@@ -31,6 +33,8 @@ public class LoadingScreen extends ScreenAdapter {
         MyGame.manager.load("textures/finish-center.png", Texture.class);
         MyGame.manager.load("textures/fan.png", Texture.class);
         MyGame.manager.load("textures/pixel.png", Texture.class);
+        MyGame.manager.load("textures/platform.png", Texture.class);
+        MyGame.manager.load("textures/joint.png", Texture.class);
     }
 
     private void loadMaps() {
@@ -56,6 +60,9 @@ public class LoadingScreen extends ScreenAdapter {
         // Finished loading assets
         if (MyGame.manager.update()) {
             Gdx.app.log("LoadingScreen", "Finished loading assets in " + (int) (timer * 100) / 100f + "s.");
+
+            MyGame.manager.get("textures/platform.png", Texture.class).setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            platformNinePatch = new NinePatch(MyGame.manager.get("textures/platform.png", Texture.class), 5, 5, 5, 5);
 
             // Start the game
             MyGame.instance.setScreen(MyGame.playScreen);

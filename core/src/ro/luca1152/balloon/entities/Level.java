@@ -184,6 +184,7 @@ public class Level {
                 }, information.x, information.y, information.x + information.width, information.y + information.height);
                 RotatingPlatform rotatingPlatform = new RotatingPlatform(world, (RectangleMapObject) rotatingPlatformsObjects.get(object), hingesFound.get(0));
                 rotatingPlatforms.add(rotatingPlatform);
+                cameraTextStage.addActor(rotatingPlatform); // Workaround since I can't manage to add it to the gameStage
             }
         }
 
