@@ -59,22 +59,14 @@ public class LoadingScreen extends ScreenAdapter {
         if (MyGame.manager.update()) {
             Gdx.app.log("LoadingScreen", "Finished loading assets in " + (int) (timer * 100) / 100f + "s.");
 
-            // Smooth the textures
-            setFilters();
+            smoothTextures();
 
             // Start the game
             MyGame.instance.setScreen(MyGame.playScreen);
         }
     }
 
-    private void setFilters() {
+    private void smoothTextures() {
         MyGame.manager.get("textures/balloon.png", Texture.class).setFilter(Linear, Linear);
-        MyGame.manager.get("textures/highlight-bl.png", Texture.class).setFilter(Linear, Linear);
-        MyGame.manager.get("textures/highlight-br.png", Texture.class).setFilter(Linear, Linear);
-        MyGame.manager.get("textures/highlight-tl.png", Texture.class).setFilter(Linear, Linear);
-        MyGame.manager.get("textures/highlight-tr.png", Texture.class).setFilter(Linear, Linear);
-        MyGame.manager.get("textures/finish-center.png", Texture.class).setFilter(Linear, Linear);
-        MyGame.manager.get("textures/fan.png", Texture.class).setFilter(Linear, Linear);
-        MyGame.manager.get("textures/pixel.png", Texture.class).setFilter(Linear, Linear);
     }
 }
