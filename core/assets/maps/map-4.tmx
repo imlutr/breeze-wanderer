@@ -26,7 +26,6 @@
   <object id="36" x="912" y="400.667" width="30.6667" height="110.667"/>
   <object id="37" x="848" y="270" width="32" height="113.333"/>
   <object id="38" x="833.333" y="268.667" width="13.3333" height="34.6667"/>
-  <object id="40" x="1382" y="990" width="4" height="4"/>
  </objectgroup>
  <objectgroup id="10" name="Air Blowers">
   <object id="15" x="768" y="256" width="64" height="64"/>
