@@ -27,6 +27,7 @@ public class LoadingScreen extends ScreenAdapter {
         MyGame.manager.load("textures/highlight-tr.png", Texture.class);
         MyGame.manager.load("textures/finish-center.png", Texture.class);
         MyGame.manager.load("textures/fan.png", Texture.class);
+        MyGame.manager.load("textures/pixel.png", Texture.class);
     }
 
     private void loadMaps() {

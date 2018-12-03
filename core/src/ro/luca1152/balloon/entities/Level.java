@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -19,10 +20,13 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import ro.luca1152.balloon.MyGame;
 import ro.luca1152.balloon.utils.MapBodyBuilder;
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class Level {
@@ -39,7 +43,7 @@ public class Level {
     private World world;
 
     // Scene2D
-    private Stage gameStage;
+    private Stage gameStage, uiStage;
 
     // Render
     private final float MIN_ZOOM = .5f, MAX_ZOOM = 1.25f;
@@ -65,6 +69,7 @@ public class Level {
 
         // Scene2D
         gameStage = new Stage(new FitViewport(10f, 10f), MyGame.batch);
+        uiStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), MyGame.batch);
 
         // Balloons
         balloons = new Array<>();
@@ -120,6 +125,17 @@ public class Level {
         finish = new Finish(MapBodyBuilder.getInformation((RectangleMapObject) tiledMap.getLayers().get("Finish").getObjects().get(0)));
         gameStage.addActor(finish);
 
+        // Fade-in effect
+        Image fadeIn = new Image(MyGame.manager.get("textures/pixel.png", Texture.class));
+        fadeIn.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        fadeIn.setColor(MyGame.backgroundWhite);
+        fadeIn.addAction(sequence(
+                fadeOut(.5f),
+                removeActor()
+                )
+        );
+        uiStage.addActor(fadeIn);
+
         // Render
         mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / MyGame.PPM, MyGame.batch);
 
@@ -141,12 +157,13 @@ public class Level {
         MyGame.batch.setProjectionMatrix(gameStage.getCamera().combined);
         mapRenderer.setView((OrthographicCamera) gameStage.getCamera());
 
-        // Draw every actor
-        gameStage.draw();
-
         // Reset the color in case there are any colored Actors
         mapRenderer.getBatch().setColor(Color.WHITE);
         mapRenderer.render();
+
+        // Draw every actor
+        gameStage.draw();
+        uiStage.draw();
 
         // Shows the Box2D debug guides
 //        MyGame.debugRenderer.render(world, gameStage.getCamera().combined);
@@ -157,6 +174,7 @@ public class Level {
         listenForCollisions();
         makeCameraFollowBalloons();
         world.step(1 / 60f, 6, 2);
+        uiStage.act(delta);
     }
 
     private void makeCameraFollowBalloons() {
@@ -226,7 +244,17 @@ public class Level {
         if (!restart)
             for (Balloon balloon : balloons) {
                 if (balloon.getCollisionBox().overlaps(finish.getCollisionBox())) {
-                    isFinished = true;
+                    // Fade-out effect;
+                    Image fadeOut = new Image(MyGame.manager.get("textures/pixel.png", Texture.class));
+                    fadeOut.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                    fadeOut.setColor(MyGame.backgroundWhite);
+                    fadeOut.getColor().a = 0f;
+                    fadeOut.addAction(sequence(
+                            fadeIn(.5f),
+                            run(() -> isFinished = true),
+                            removeActor()
+                    ));
+                    uiStage.addActor(fadeOut);
                 }
             }
     }
