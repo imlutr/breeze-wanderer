@@ -116,7 +116,7 @@ public class Level {
         }
 
         // Finish
-        finish = new Finish(((RectangleMapObject) tiledMap.getLayers().get("Finish").getObjects().get(0)).getRectangle());
+        finish = new Finish(MapBodyBuilder.getInformation((RectangleMapObject) tiledMap.getLayers().get("Finish").getObjects().get(0)));
         gameStage.addActor(finish);
 
         // Render
@@ -137,9 +137,10 @@ public class Level {
 
     public void draw() {
         MyGame.batch.setProjectionMatrix(gameStage.getCamera().combined);
+        mapRenderer.setView((OrthographicCamera) gameStage.getCamera());
         gameStage.draw();
         mapRenderer.render();
-        MyGame.debugRenderer.render(world, gameStage.getCamera().combined);
+//        MyGame.debugRenderer.render(world, gameStage.getCamera().combined);
     }
 
     public void update(float delta) {

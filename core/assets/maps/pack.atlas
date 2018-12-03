@@ -1,0 +1,146 @@
+
+pack.png
+size: 280,350
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+1-h-a-full
+  rotate: false
+  xy: 0, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+1-h-b-left
+  rotate: false
+  xy: 66, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+1-h-b-middle
+  rotate: false
+  xy: 132, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+1-h-b-right
+  rotate: false
+  xy: 198, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+2-v-a-full
+  rotate: false
+  xy: 0, 66
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+2-v-b-down
+  rotate: false
+  xy: 66, 66
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+2-v-b-middle
+  rotate: false
+  xy: 132, 66
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+2-v-b-up
+  rotate: false
+  xy: 198, 66
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+3-joint-n-dl
+  rotate: false
+  xy: 0, 132
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+3-joint-n-dr
+  rotate: false
+  xy: 66, 132
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+3-joint-n-ul
+  rotate: false
+  xy: 132, 132
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+3-joint-n-ur
+  rotate: false
+  xy: 198, 132
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+4-joint-h-ld
+  rotate: false
+  xy: 0, 198
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+4-joint-h-lu
+  rotate: false
+  xy: 66, 198
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+4-joint-h-rd
+  rotate: false
+  xy: 132, 198
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+4-joint-h-ru
+  rotate: false
+  xy: 198, 198
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+5-joint-h-dl
+  rotate: false
+  xy: 0, 264
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+5-joint-h-dr
+  rotate: false
+  xy: 66, 264
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+5-joint-h-ul
+  rotate: false
+  xy: 132, 264
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+5-joint-h-ur
+  rotate: false
+  xy: 198, 264
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1

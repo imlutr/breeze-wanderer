@@ -12,7 +12,7 @@ import ro.luca1152.balloon.MyGame;
 
 class Balloon extends Image {
     // Constants
-    private final float WIDTH = 1.2f, HEIGHT = 1.6f;
+    private final float WIDTH = 1f, HEIGHT = 1.3f;
 
     // Collisions
     private Rectangle collisionBox;

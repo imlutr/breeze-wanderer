@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="2018.11.29" orientation="orthogonal" renderorder="right-down" width="11" height="7" tilewidth="64" tileheight="64" infinite="0" nextlayerid="11" nextobjectid="51">
+<map version="1.2" tiledversion="2018.11.29" orientation="orthogonal" renderorder="right-down" width="9" height="7" tilewidth="64" tileheight="64" infinite="0" nextlayerid="14" nextobjectid="56">
+ <tileset firstgid="1" source="pack.tsx"/>
+ <tileset firstgid="1" source="pack.tsx"/>
+ <tileset firstgid="21" source="pack.tsx"/>
+ <layer id="13" name="Solid Tiles" width="9" height="7">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAOiAGxOA4sS4R+aSqpkSJCDbEAALXsAQ4=
+  </data>
+ </layer>
  <objectgroup id="7" name="Solids">
-  <object id="39" x="128" y="95" width="512" height="32"/>
-  <object id="47" x="608" y="128" width="32" height="194.667"/>
+  <object id="51" x="64" y="80" width="494.667" height="30.6667"/>
+  <object id="52" x="528" y="110.667" width="32" height="208"/>
  </objectgroup>
  <objectgroup id="8" name="Finish">
-  <object id="35" x="477.333" y="130.667" width="128" height="189.333"/>
+  <object id="35" x="392.333" y="118.334" width="128" height="202.333"/>
  </objectgroup>
  <objectgroup id="9" name="Air Blowers">
-  <object id="41" x="64" y="192" width="64" height="64"/>
+  <object id="41" x="0" y="192" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="10" name="Balloons">
-  <object id="50" x="185" y="303" width="76.8" height="102.4"/>
+  <object id="50" x="121" y="303" width="76.8" height="102.4"/>
  </objectgroup>
 </map>
