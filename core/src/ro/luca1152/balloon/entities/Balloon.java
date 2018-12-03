@@ -12,7 +12,7 @@ import ro.luca1152.balloon.MyGame;
 
 class Balloon extends Image {
     // Constants
-    private final float WIDTH = 1f, HEIGHT = 1.3f;
+    private final float WIDTH = 1.05f, HEIGHT = 1.35f;
 
     // Collisions
     private Rectangle collisionBox;
@@ -37,6 +37,7 @@ class Balloon extends Image {
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = createEllipse(WIDTH / 2f, HEIGHT / 2f);
+        fixtureDef.friction = 0f;
         body.createFixture(fixtureDef);
         body.setTransform(getX() + getWidth() / 2f, getY() + getHeight() / 2f, 0f);
         body.setLinearDamping(.15f);

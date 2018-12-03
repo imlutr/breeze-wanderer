@@ -46,7 +46,7 @@ public class AirBlower extends Image {
         addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                explode(world, 32, 4f, 140f, getX() + getOriginX(), getY() + getOriginY());
+                explode(world, 32, 4f, 150f, getX() + getOriginX(), getY() + getOriginY());
                 return true;
             }
         });
