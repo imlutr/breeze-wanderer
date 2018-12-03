@@ -33,7 +33,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class Level {
-    // Render
+    // Constants
     private final float MIN_ZOOM = .8f, MAX_ZOOM = 1.25f;
 
     // Booleans
@@ -49,8 +49,11 @@ public class Level {
     private World world;
 
     // Scene2D
-    private Stage gameStage, uiStage, fadeStage;
+    private Stage gameStage, cameraTextStage, staticTextStage;
     private OrthogonalTiledMapRenderer mapRenderer;
+
+    // Labels
+    private Label.LabelStyle labelStyle;
 
     // Fade out
     private Image fadeOut;
@@ -76,8 +79,8 @@ public class Level {
 
         // Scene2D
         gameStage = new Stage(new FitViewport(10f, 10f), MyGame.batch);
-        uiStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), MyGame.batch);
-        fadeStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), MyGame.batch);
+        cameraTextStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), MyGame.batch);
+        staticTextStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), MyGame.batch);
 
         // Balloons
         balloons = new Array<>();
@@ -134,7 +137,7 @@ public class Level {
         gameStage.addActor(finish);
 
         // Text
-        Label.LabelStyle labelStyle = new Label.LabelStyle(MyGame.manager.get("fonts/DIN1451-26pt.fnt", BitmapFont.class), new Color(0 / 255f, 174 / 255f, 181 / 255f, 1));
+        labelStyle = new Label.LabelStyle(MyGame.manager.get("fonts/DIN1451-26pt.fnt", BitmapFont.class), new Color(0 / 255f, 174 / 255f, 181 / 255f, 1));
         if (tiledMap.getLayers().get("Text") != null) {
             MapObjects textObjects = tiledMap.getLayers().get("Text").getObjects();
             for (int object = 0; object < textObjects.getCount(); object++) {
@@ -146,9 +149,14 @@ public class Level {
                 label.setSize(information.getWidth(), information.getHeight());
                 label.setWrap(true);
                 label.setAlignment(Align.center, Align.center);
-                uiStage.addActor(label);
+                cameraTextStage.addActor(label);
             }
         }
+
+        // Level number label
+        Label label = new Label("#" + levelNumber, labelStyle);
+        label.setPosition(Gdx.graphics.getWidth() - label.getWidth() - 5, 2);
+        staticTextStage.addActor(label);
 
         // Fade-in effect
         Image fadeIn = new Image(MyGame.manager.get("textures/pixel.png", Texture.class));
@@ -159,14 +167,14 @@ public class Level {
                 removeActor()
                 )
         );
-        fadeStage.addActor(fadeIn);
+        staticTextStage.addActor(fadeIn);
 
         // Fade-out effect
         fadeOut = new Image(MyGame.manager.get("textures/pixel.png", Texture.class));
         fadeOut.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         fadeOut.setColor(MyGame.backgroundWhite);
         fadeOut.getColor().a = 0f;
-        fadeStage.addActor(fadeOut);
+        staticTextStage.addActor(fadeOut);
 
         // Render
         mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / MyGame.PPM, MyGame.batch);
@@ -195,8 +203,8 @@ public class Level {
 
         // Draw every actor
         gameStage.draw();
-        uiStage.draw();
-        fadeStage.draw();
+        cameraTextStage.draw();
+        staticTextStage.draw();
 
         // Shows the Box2D debug guides
 //        MyGame.debugRenderer.render(world, gameStage.getCamera().combined);
@@ -209,8 +217,8 @@ public class Level {
         updatePhysics();
         listenForCollisions();
         autoRestart();
-        uiStage.act(delta);
-        fadeStage.act(delta);
+        cameraTextStage.act(delta);
+        staticTextStage.act(delta);
     }
 
     private void makeCameraFollowBalloons() {
@@ -223,7 +231,7 @@ public class Level {
             gameStage.getCamera().update();
         }
 
-        uiStage.getCamera().position.set(gameStage.getCamera().position.x * MyGame.PPM, gameStage.getCamera().position.y * MyGame.PPM, 0f);
+        cameraTextStage.getCamera().position.set(gameStage.getCamera().position.x * MyGame.PPM, gameStage.getCamera().position.y * MyGame.PPM, 0f);
     }
 
     private void checkIfFinished() {
