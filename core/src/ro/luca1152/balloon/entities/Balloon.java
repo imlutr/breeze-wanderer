@@ -14,6 +14,7 @@ import ro.luca1152.balloon.MyGame;
 class Balloon extends Image {
     // Constants
     private final float WIDTH = 1.05f, HEIGHT = 1.35f;
+    public boolean isDeleted = false;
 
     // Box2D
     Body body;
@@ -76,6 +77,7 @@ class Balloon extends Image {
                 // Remove the balloon if it was touched
                 world.destroyBody(topCircleBody);
                 world.destroyBody(botCircleBody);
+                isDeleted = true;
                 remove();
                 return true;
             }

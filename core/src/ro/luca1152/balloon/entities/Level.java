@@ -27,6 +27,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import ro.luca1152.balloon.MyGame;
+import ro.luca1152.balloon.screens.PlayScreen;
 import ro.luca1152.balloon.utils.MapBodyBuilder;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
@@ -38,9 +39,11 @@ public class Level {
 
     // Restart
     public boolean restart = false;
+    private boolean shouldRestart = false;
+    private boolean isRestarting = false;
+
     // Finish
     public boolean isFinished = false;
-    private boolean shouldRestart = false;
 
     // TiledMap
     private TiledMap tiledMap;
@@ -157,6 +160,9 @@ public class Level {
                 String text = (String) textObjects.get(object).getProperties().get("text");
                 Rectangle information = ((RectangleMapObject) textObjects.get(object)).getRectangle();
 
+                if (levelNumber == 10)
+                    text += " " + (int) (PlayScreen.timer * 100) / 100f + "s!";
+
                 Label label = new Label(text, labelStyle);
                 label.setPosition(information.getX(), information.getY());
                 label.setSize(information.getWidth(), information.getHeight());
@@ -247,7 +253,7 @@ public class Level {
     }
 
     private void checkIfFinished() {
-        if (Math.abs(fadeOut.getColor().a - 1f) <= 2f / 255f)
+        if (Math.abs(fadeOut.getColor().a - 1f) <= 4f / 255f && !isRestarting)
             isFinished = true;
     }
 
@@ -276,6 +282,8 @@ public class Level {
         if (shouldFadeOut || shouldRestart) {
             shouldFadeOut = false;
             isFadingOut = true;
+            if (shouldRestart)
+                isRestarting = true;
             removeAllActions(fadeOut);
             fadeOut.addAction(sequence(fadeIn(.4f)));
             if (shouldRestart) {
@@ -293,7 +301,7 @@ public class Level {
 
     private void autoRestart() {
         for (int i = 0; i < balloons.size; i++)
-            if (balloons.get(i).body.getPosition().y - mapHeight >= 1.5f)
+            if (balloons.get(i).body.getPosition().y - mapHeight >= 1.5f || balloons.get(i).isDeleted)
                 balloonsToRemove.add(balloons.get(i));
         balloons.removeAll(balloonsToRemove, true);
         if (balloons.size == 0)

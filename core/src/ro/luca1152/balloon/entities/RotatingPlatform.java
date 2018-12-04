@@ -41,7 +41,8 @@ class RotatingPlatform extends Group {
         revoluteJointDef.localAnchorA.set(0f, 0f);
         revoluteJointDef.collideConnected = false;
         revoluteJointDef.enableMotor = true;
-        revoluteJointDef.maxMotorTorque = 5;
+        revoluteJointDef.maxMotorTorque = 2f;
+        revoluteJointDef.enableLimit = false;
         joint = (RevoluteJoint) world.createJoint(revoluteJointDef);
 
         // Actor

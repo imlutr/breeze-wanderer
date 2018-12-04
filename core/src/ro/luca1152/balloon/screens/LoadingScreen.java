@@ -14,7 +14,7 @@ import ro.luca1152.balloon.MyGame;
 @SuppressWarnings({"FieldCanBeLocal", "Duplicates"})
 public class LoadingScreen extends ScreenAdapter {
     public static NinePatch platformNinePatch;
-    private final int MAP_COUNT = 8;
+    private final int MAP_COUNT = 10;
     private float timer = 0f;
 
     @Override

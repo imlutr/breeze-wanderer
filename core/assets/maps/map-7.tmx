@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="2018.11.29" orientation="orthogonal" renderorder="right-down" width="11" height="14" tilewidth="64" tileheight="64" infinite="0" nextlayerid="11" nextobjectid="17">
+<map version="1.2" tiledversion="2018.11.29" orientation="orthogonal" renderorder="right-down" width="11" height="16" tilewidth="64" tileheight="64" infinite="0" nextlayerid="9" nextobjectid="19">
  <tileset firstgid="1" source="pack.tsx"/>
- <layer id="10" name="Solid Tiles" width="11" height="14">
+ <layer id="8" name="Solid Tiles" width="11" height="16">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,
-0,10,3,3,3,3,3,3,3,9,0,
-0,7,0,0,0,0,0,0,0,7,0,
-0,7,0,0,0,0,0,0,0,7,0,
-0,6,0,0,0,0,0,0,0,6,0,
+0,10,3,3,3,9,0,0,0,0,0,
+0,7,0,0,0,7,0,0,0,0,0,
+0,6,0,0,0,6,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,2,3,3,9,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,6,0,
 0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,
@@ -19,36 +21,27 @@
 0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="2" name="Rotating Platforms">
-  <object id="1" x="128" y="592" width="450" height="32"/>
+ <objectgroup id="2" name="Solids">
+  <object id="1" x="384.5" y="400" width="239" height="31"/>
+  <object id="2" x="592.5" y="430" width="32" height="17"/>
+  <object id="3" x="591.5" y="512" width="32" height="63"/>
+  <object id="11" x="336" y="112" width="32" height="144"/>
+  <object id="12" x="80" y="112" width="32" height="144"/>
+  <object id="13" x="81.3333" y="80" width="286.667" height="32"/>
  </objectgroup>
- <objectgroup id="6" name="Text">
-  <object id="7" x="117.5" y="448.5" width="467" height="71">
-   <properties>
-    <property name="text" value="You may need to sacrifice some balloons in order to finish the levels"/>
-   </properties>
-   <text fontfamily="Alte DIN 1451 Mittelschrift" pixelsize="27" wrap="1" color="#00aeb5" halign="center" valign="center">You may need to sacrifice some balloons in order to finish the levels</text>
-  </object>
-  <object id="8" x="128.5" y="735.5" width="447" height="37">
-   <properties>
-    <property name="text" value="To pop a balloon, click on it"/>
-   </properties>
-   <text fontfamily="Alte DIN 1451 Mittelschrift" pixelsize="27" wrap="1" color="#00aeb5" halign="center" valign="center">To pop a balloon, click on it</text>
-  </object>
- </objectgroup>
- <objectgroup id="3" name="Hinges">
-  <object id="3" x="346" y="604" width="10" height="10"/>
+ <objectgroup id="3" name="Air Blowers">
+  <object id="5" x="576" y="448" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="4" name="Balloons">
-  <object id="5" x="157.5" y="649" width="67" height="86"/>
-  <object id="6" x="470.5" y="649" width="67" height="86"/>
+  <object id="7" x="447" y="464" width="67" height="86"/>
  </objectgroup>
  <objectgroup id="7" name="Finish">
-  <object id="10" x="118" y="118" width="467" height="201"/>
+  <object id="15" x="117.333" y="121.333" width="210.667" height="134.667"/>
  </objectgroup>
- <objectgroup id="5" name="Solids">
-  <object id="12" x="593" y="80" width="32" height="237"/>
-  <object id="15" x="80" y="80.5" width="32" height="239"/>
-  <object id="16" x="112" y="80.5" width="481" height="31"/>
+ <objectgroup id="6" name="Rotating Platforms">
+  <object id="9" x="336" y="448" width="32" height="320"/>
+ </objectgroup>
+ <objectgroup id="5" name="Hinges">
+  <object id="8" x="346" y="605.5" width="10" height="10"/>
  </objectgroup>
 </map>
