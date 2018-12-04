@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="2018.11.29" orientation="orthogonal" renderorder="right-down" width="9" height="13" tilewidth="64" tileheight="64" infinite="0" nextlayerid="10" nextobjectid="19">
+<map version="1.2" tiledversion="2018.11.29" orientation="orthogonal" renderorder="right-down" width="9" height="10" tilewidth="64" tileheight="64" infinite="0" nextlayerid="12" nextobjectid="19">
+ <properties>
+  <property name="zoom" type="float" value="1.2"/>
+ </properties>
  <tileset firstgid="1" source="pack.tsx"/>
  <objectgroup id="2" name="Solids">
-  <object id="15" x="128" y="333" width="190" height="36"/>
-  <object id="16" x="322" y="141" width="188" height="34"/>
+  <object id="15" x="128" y="205" width="190" height="36"/>
+  <object id="16" x="322" y="13" width="188" height="34"/>
  </objectgroup>
  <objectgroup id="4" name="Finish">
-  <object id="17" x="320" y="179" width="188" height="74"/>
+  <object id="17" x="320" y="51" width="188" height="74"/>
  </objectgroup>
  <objectgroup id="9" name="Text">
-  <object id="18" x="123.5" y="261.5" width="201" height="71">
+  <object id="18" x="123.5" y="133.5" width="201" height="71">
    <properties>
     <property name="text" value="To restart the level press `R`"/>
    </properties>
@@ -17,20 +20,17 @@
   </object>
  </objectgroup>
  <objectgroup id="3" name="Balloons">
-  <object id="11" x="192" y="704" width="67" height="86"/>
+  <object id="11" x="192" y="534" width="67" height="86"/>
  </objectgroup>
  <objectgroup id="5" name="Air Blowers">
-  <object id="14" x="64" y="448" width="64" height="64"/>
+  <object id="14" x="64" y="320" width="64" height="64"/>
  </objectgroup>
- <layer id="8" name="Solid Tiles" width="9" height="13">
+ <layer id="11" name="Solid Tiles" width="9" height="10">
   <data encoding="csv">
-0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,2,3,4,0,
 0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,
 0,0,2,3,4,0,0,0,0,
-0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,

@@ -71,6 +71,8 @@ public class LoadingScreen extends ScreenAdapter {
             Gdx.app.log("LoadingScreen", "Finished loading assets in " + (int) (timer * 100) / 100f + "s.");
 
             MyGame.manager.get("textures/platform.png", Texture.class).setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            MyGame.manager.get("textures/balloon.png", Texture.class).setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            MyGame.manager.get("textures/fan.png", Texture.class).setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             platformNinePatch = new NinePatch(MyGame.manager.get("textures/platform.png", Texture.class), 5, 5, 5, 5);
 
             // Start the game

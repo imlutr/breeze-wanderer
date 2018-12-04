@@ -13,7 +13,6 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -34,19 +33,19 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class Level {
-    // Constants
-    private final float MIN_ZOOM = .8f, MAX_ZOOM = 1.25f;
-
     // Restart
     public boolean restart = false;
     // Finish
     public boolean isFinished = false;
     private boolean shouldRestart = false;
     private boolean isRestarting = false;
+
     // TiledMap
     private TiledMap tiledMap;
     private MapProperties mapProperties;
     private int mapWidth, mapHeight;
+    private float mapZoom;
+
 
     // Box2D
     private World world;
@@ -77,6 +76,7 @@ public class Level {
         mapProperties = tiledMap.getProperties();
         mapWidth = (Integer) mapProperties.get("width");
         mapHeight = (Integer) mapProperties.get("height");
+        mapZoom = (Float) mapProperties.get("zoom");
 
         // Box2D
         world = new World(new Vector2(0, -10f), true);
@@ -84,7 +84,9 @@ public class Level {
 
         // Scene2D
         gameStage = new Stage(new FitViewport(10f, 10f), MyGame.batch);
+        ((OrthographicCamera) gameStage.getCamera()).zoom = mapZoom;
         cameraTextStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), MyGame.batch);
+        ((OrthographicCamera) cameraTextStage.getCamera()).zoom = mapZoom;
         staticTextStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), MyGame.batch);
 
         // Balloons
@@ -243,8 +245,7 @@ public class Level {
         if (balloons.size != 0) {
             BoundingBox balloonsBox = getBalloonsBoundingBox(balloons);
             Vector3 centerPoint = getBalloonsCenterPoint(balloonsBox);
-            gameStage.getCamera().position.slerp(centerPoint, .15f);
-//            zoomTheCamera(balloonsBox, (OrthographicCamera) gameStage.getCamera());
+            gameStage.getCamera().position.slerp(centerPoint, .1f);
             keepCameraWithinBounds();
             gameStage.getCamera().update();
         }
@@ -328,35 +329,38 @@ public class Level {
     private void keepCameraWithinBounds() {
         OrthographicCamera camera = (OrthographicCamera) gameStage.getCamera();
 
-        float mapLeft = 0f, mapRight = mapWidth;
-        if (mapWidth > camera.viewportWidth) {
-            mapLeft = -1;
-            mapRight = mapWidth + 1;
-        }
-        float mapBottom = 0f, mapTop = mapHeight;
-        float cameraHalfWidth = camera.viewportWidth / 2f, cameraHalfHeight = camera.viewportHeight / 2f;
-        float cameraLeft = camera.position.x - cameraHalfWidth, cameraRight = camera.position.x - cameraHalfWidth;
-        float cameraBottom = camera.position.y - cameraHalfHeight, cameraTop = camera.position.y + cameraHalfHeight;
+        float minCameraX = camera.zoom * (camera.viewportWidth / 2);
+        float maxCameraX = mapWidth - minCameraX;
+        float minCameraY = camera.zoom * (camera.viewportHeight / 2);
+        float maxCameraY = mapHeight - minCameraY;
+        camera.position.set(Math.min(maxCameraX, Math.max(camera.position.x, minCameraX)),
+                Math.min(maxCameraY, Math.max(camera.position.y, minCameraY)),
+                0);
 
-        // Clam horizontal axis
-        if (camera.viewportWidth > mapRight) camera.position.x = mapRight / 2f;
-        else if (cameraLeft <= mapLeft) camera.position.x = mapLeft + cameraHalfWidth;
-        else if (cameraRight >= mapRight) camera.position.x = mapRight - cameraHalfWidth;
-
-        // Clamp vertical axis
-        if (camera.viewportHeight > mapTop) camera.position.y = mapTop / 2f;
-        else if (cameraBottom <= mapBottom) camera.position.y = mapBottom + cameraHalfHeight;
-        else if (cameraTop >= mapTop) camera.position.y = mapTop - cameraHalfHeight;
+//        float mapLeft = 0f, mapRight = mapWidth;
+//        if (mapWidth > camera.viewportWidth) {
+//            mapLeft = -1;
+//            mapRight = mapWidth + 1;
+//        }
+//        float mapBottom = 0f, mapTop = mapHeight;
+//        float cameraHalfWidth = camera.viewportWidth / 2f, cameraHalfHeight = camera.viewportHeight / 2f;
+//        float cameraLeft = camera.position.x - cameraHalfWidth, cameraRight = camera.position.x - cameraHalfWidth;
+//        float cameraBottom = camera.position.y - cameraHalfHeight, cameraTop = camera.position.y + cameraHalfHeight;
+//
+//        // Clam horizontal axis
+//        if (camera.viewportWidth > mapRight) camera.position.x = mapRight / 2f;
+//        else if (cameraLeft <= mapLeft) camera.position.x = mapLeft + cameraHalfWidth;
+//        else if (cameraRight >= mapRight) camera.position.x = mapRight - cameraHalfWidth;
+//
+//        // Clamp vertical axis
+//        if (camera.viewportHeight > mapTop) camera.position.y = mapTop / 2f;
+//        else if (cameraBottom <= mapBottom) camera.position.y = mapBottom + cameraHalfHeight;
+//        else if (cameraTop >= mapTop) camera.position.y = mapTop - cameraHalfHeight;
     }
 
     private void removeAllActions(Actor actor) {
         for (int i = 0; i < actor.getActions().size; i++)
             actor.removeAction(actor.getActions().get(i));
-    }
-
-    private void zoomTheCamera(BoundingBox boundingBox, OrthographicCamera camera) {
-        if (balloons.size > 1)
-            camera.zoom = MathUtils.lerp(MIN_ZOOM, MAX_ZOOM, Math.min(getGreatestDistance(boundingBox) / mapWidth, 1f));
     }
 
     private float getGreatestDistance(BoundingBox boundingBox) {
