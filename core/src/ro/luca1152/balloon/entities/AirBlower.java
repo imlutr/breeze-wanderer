@@ -51,7 +51,7 @@ class AirBlower extends Group {
         body.createFixture(fixtureDef);
 
         // Highlight
-        highlight = new Highlight(MapBodyBuilder.getInformation(mapObject), new Color(43 / 255f, 43 / 255f, 45 / 255f, .6f));
+        highlight = new Highlight(MapBodyBuilder.getInformation(mapObject), new Color(0 / 255f, 77 / 255f, 74 / 255f, .6f));
         highlight.setVisible(false);
         addActor(highlight);
 

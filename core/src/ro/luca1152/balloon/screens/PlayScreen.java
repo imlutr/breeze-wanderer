@@ -12,7 +12,7 @@ import ro.luca1152.balloon.entities.Level;
 public class PlayScreen extends ScreenAdapter {
     // Level
     public static float timer = 0f;
-    private int levelNumber = 9;
+    private int levelNumber = 1;
     private Level level;
 
     @Override
@@ -46,7 +46,7 @@ public class PlayScreen extends ScreenAdapter {
             level = new Level(++levelNumber);
 
             // Audio
-            MyGame.manager.get("audio/win.wav", Sound.class).play(.0125f);
+            MyGame.manager.get("audio/win.wav", Sound.class).play(.008f);
         }
 
         if (levelNumber != 10)

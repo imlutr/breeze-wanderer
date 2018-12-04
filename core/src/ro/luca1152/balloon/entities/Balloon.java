@@ -81,7 +81,7 @@ class Balloon extends Image {
                 isDeleted = true;
 
                 // Audio
-                MyGame.manager.get("audio/pop.wav", Sound.class).play(0.25f);
+                MyGame.manager.get("audio/pop.wav", Sound.class).play(0.025f);
 
                 // Remove the actor
                 remove();
