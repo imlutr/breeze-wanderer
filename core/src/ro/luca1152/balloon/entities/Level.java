@@ -39,12 +39,10 @@ public class Level {
 
     // Restart
     public boolean restart = false;
-    private boolean shouldRestart = false;
-    private boolean isRestarting = false;
-
     // Finish
     public boolean isFinished = false;
-
+    private boolean shouldRestart = false;
+    private boolean isRestarting = false;
     // TiledMap
     private TiledMap tiledMap;
     private MapProperties mapProperties;
@@ -210,6 +208,7 @@ public class Level {
                     }
                 }));
     }
+
 
     public void draw() {
         // Prerequisites

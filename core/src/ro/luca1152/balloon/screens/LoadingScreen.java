@@ -3,6 +3,8 @@ package ro.luca1152.balloon.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -22,6 +24,7 @@ public class LoadingScreen extends ScreenAdapter {
         loadTextures();
         loadMaps();
         loadFonts();
+        loadAudio();
     }
 
     private void loadTextures() {
@@ -45,6 +48,12 @@ public class LoadingScreen extends ScreenAdapter {
 
     private void loadFonts() {
         MyGame.manager.load("fonts/DIN1451-26pt.fnt", BitmapFont.class);
+    }
+
+    private void loadAudio() {
+        MyGame.manager.load("audio/piano-loop.mp3", Music.class);
+        MyGame.manager.load("audio/pop.wav", Sound.class);
+        MyGame.manager.load("audio/win.wav", Sound.class);
     }
 
     @Override

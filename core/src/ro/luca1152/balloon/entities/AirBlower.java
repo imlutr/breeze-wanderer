@@ -1,5 +1,6 @@
 package ro.luca1152.balloon.entities;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -74,6 +75,10 @@ class AirBlower extends Group {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 explode(world, 32, 6f, 180f, fan.getX() + fan.getOriginX(), fan.getY() + fan.getOriginY());
+
+                // Audio
+                MyGame.manager.get("audio/pop.wav", Sound.class).play(.025f);
+
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
