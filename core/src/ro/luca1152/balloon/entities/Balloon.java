@@ -1,5 +1,6 @@
 package ro.luca1152.balloon.entities;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -78,7 +79,13 @@ class Balloon extends Image {
                 world.destroyBody(topCircleBody);
                 world.destroyBody(botCircleBody);
                 isDeleted = true;
+
+                // Audio
+                MyGame.manager.get("audio/pop.wav", Sound.class).play(0.25f);
+
+                // Remove the actor
                 remove();
+
                 return true;
             }
         });
