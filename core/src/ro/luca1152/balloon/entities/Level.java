@@ -42,6 +42,7 @@ public class Level {
 
     // TiledMap
     private TiledMap tiledMap;
+    private int levelNumber;
     private MapProperties mapProperties;
     private int mapWidth, mapHeight;
     private float mapZoom;
@@ -72,6 +73,7 @@ public class Level {
 
     public Level(int levelNumber) {
         // TiledMap
+        this.levelNumber = levelNumber;
         tiledMap = MyGame.manager.get("maps/map-" + levelNumber + ".tmx", TiledMap.class);
         mapProperties = tiledMap.getProperties();
         mapWidth = (Integer) mapProperties.get("width");
@@ -333,37 +335,11 @@ public class Level {
         float maxCameraX = mapWidth - minCameraX;
         float minCameraY = camera.zoom * (camera.viewportHeight / 2);
         float maxCameraY = mapHeight - minCameraY;
-        camera.position.set(Math.min(maxCameraX, Math.max(camera.position.x, minCameraX)),
-                Math.min(maxCameraY, Math.max(camera.position.y, minCameraY)),
-                0);
-
-//        float mapLeft = 0f, mapRight = mapWidth;
-//        if (mapWidth > camera.viewportWidth) {
-//            mapLeft = -1;
-//            mapRight = mapWidth + 1;
-//        }
-//        float mapBottom = 0f, mapTop = mapHeight;
-//        float cameraHalfWidth = camera.viewportWidth / 2f, cameraHalfHeight = camera.viewportHeight / 2f;
-//        float cameraLeft = camera.position.x - cameraHalfWidth, cameraRight = camera.position.x - cameraHalfWidth;
-//        float cameraBottom = camera.position.y - cameraHalfHeight, cameraTop = camera.position.y + cameraHalfHeight;
-//
-//        // Clam horizontal axis
-//        if (camera.viewportWidth > mapRight) camera.position.x = mapRight / 2f;
-//        else if (cameraLeft <= mapLeft) camera.position.x = mapLeft + cameraHalfWidth;
-//        else if (cameraRight >= mapRight) camera.position.x = mapRight - cameraHalfWidth;
-//
-//        // Clamp vertical axis
-//        if (camera.viewportHeight > mapTop) camera.position.y = mapTop / 2f;
-//        else if (cameraBottom <= mapBottom) camera.position.y = mapBottom + cameraHalfHeight;
-//        else if (cameraTop >= mapTop) camera.position.y = mapTop - cameraHalfHeight;
+        camera.position.set(Math.min(maxCameraX, Math.max(camera.position.x, minCameraX)), Math.min(maxCameraY, Math.max(camera.position.y, minCameraY)), 0);
     }
 
     private void removeAllActions(Actor actor) {
         for (int i = 0; i < actor.getActions().size; i++)
             actor.removeAction(actor.getActions().get(i));
-    }
-
-    private float getGreatestDistance(BoundingBox boundingBox) {
-        return Math.max(boundingBox.getWidth(), boundingBox.getHeight());
     }
 }

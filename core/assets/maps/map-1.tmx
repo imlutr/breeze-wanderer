@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="2018.11.29" orientation="orthogonal" renderorder="right-down" width="9" height="7" tilewidth="64" tileheight="64" infinite="0" nextlayerid="11" nextobjectid="15">
+<map version="1.2" tiledversion="2018.11.29" orientation="orthogonal" renderorder="right-down" width="11" height="12" tilewidth="64" tileheight="64" infinite="0" nextlayerid="17" nextobjectid="15">
  <properties>
   <property name="zoom" type="float" value="1"/>
  </properties>
  <tileset firstgid="1" source="pack.tsx"/>
- <layer id="10" name="Solid Tiles" width="9" height="7">
+ <layer id="16" name="Solid Tiles" width="11" height="12">
   <data encoding="csv">
-0,0,0,0,0,0,0,0,0,
-0,2,3,3,3,3,3,3,9,
-0,0,0,0,0,0,0,0,7,
-0,0,0,0,0,0,0,0,7,
-0,0,0,0,0,0,0,0,6,
-0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,2,3,3,3,3,3,3,9,0,
+0,0,0,0,0,0,0,0,0,7,0,
+0,0,0,0,0,0,0,0,0,7,0,
+0,0,0,0,0,0,0,0,0,6,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
  <objectgroup id="2" name="Finish">
-  <object id="1" x="397.333" y="118.667" width="122.667" height="198.667"/>
+  <object id="1" x="461.333" y="310.667" width="122.667" height="198.667"/>
  </objectgroup>
  <objectgroup id="7" name="Text">
-  <object id="13" x="1.167" y="11.4997" width="575" height="67">
+  <object id="13" x="65.167" y="203.5" width="575" height="67">
    <properties>
     <property name="text">The rectangle from the right side
  is the finish point</property>
@@ -27,7 +32,7 @@
    <text fontfamily="Alte DIN 1451 Mittelschrift" pixelsize="27" wrap="1" color="#00aeb5" halign="center">The rectangle from the right
 side is the finish point</text>
   </object>
-  <object id="14" x="1.16633" y="319.833" width="575" height="68.3333">
+  <object id="14" x="65.1663" y="511.833" width="575" height="68.3333">
    <properties>
     <property name="text">Tap on the blue fan to
 push the balloon</property>
@@ -37,13 +42,13 @@ push the balloon</text>
   </object>
  </objectgroup>
  <objectgroup id="3" name="Balloons">
-  <object id="7" x="126.667" y="237.333" width="67" height="86"/>
+  <object id="7" x="190.667" y="429.333" width="67" height="86"/>
  </objectgroup>
  <objectgroup id="6" name="Solids">
-  <object id="8" x="64" y="80.6667" width="493.333" height="29.3333"/>
-  <object id="9" x="528" y="108.667" width="32" height="210.667"/>
+  <object id="8" x="128" y="272.667" width="493.333" height="29.3333"/>
+  <object id="9" x="592" y="300.667" width="32" height="210.667"/>
  </objectgroup>
  <objectgroup id="4" name="Air Blowers">
-  <object id="5" x="0" y="192" width="64" height="64"/>
+  <object id="5" x="64" y="384" width="64" height="64"/>
  </objectgroup>
 </map>
